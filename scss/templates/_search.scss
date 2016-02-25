@@ -1,0 +1,27 @@
+#search{
+
+  background: color_main();
+  width:      100%;
+  height:     100%;
+  z-index:    1000;
+  position:   absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: none;
+
+  >span#close{
+    font-family: $font_main;
+    color: $font_color_main;
+    font-size: 90px;
+    float: right;
+    margin-top: -10px;
+    margin-right: 10px;
+    &:hover{
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+}

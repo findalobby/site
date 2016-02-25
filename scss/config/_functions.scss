@@ -1,0 +1,7 @@
+@function color_main($opacity:1){
+  @return rgba(236, 98, 9, $opacity);
+}
+
+@function second_color($opacity:1){
+  @return rgba(45, 45, 45, $opacity);
+}

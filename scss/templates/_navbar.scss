@@ -1,0 +1,39 @@
+.navbar-default{
+  background: none;
+  border: none;
+  @media(max-width: 768px){
+    background-color:second_color(0.8);
+  }
+}
+
+.navbar-default{
+
+  .navbar-toggle{
+    background-color: color_main();
+    border:none;
+
+    .icon-bar {
+      background-color: $font_color_main;
+    }
+
+    &:hover, &:focus{
+      background-color: color_main();
+    }
+
+  }
+
+  .navbar-collapse{
+    border: none;
+  }
+}
+
+.navbar-default .nav li a {
+    text-transform: uppercase;
+    font-family: $font_main;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: $font_color_main;
+    &:hover, &:focus{
+      color: color_main();
+    }
+}

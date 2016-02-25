@@ -1,0 +1,80 @@
+header {
+    text-align: center;
+    color: $font_color_main;
+    background-attachment: scroll;
+    background-image: url(../../imgs/bg1.jpg);
+    background-position: center center;
+    background-repeat: none;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+.transitionBG{
+  transition: background-image 1s ease-in-out;
+}
+
+.btn-xl {
+  background-color: color_main();
+  padding: 20px 40px;
+  border-color: color_main();
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-family: $font_main;
+  font-size: 18px;
+  font-weight: 700;
+  color: $font_color_main;
+  transition: all 1s;
+  &:hover, &:focus{
+    background-color:rgb(214, 94, 16);
+    transition: all 1s;
+    color:$font_color_main;
+  }
+}
+
+header .intro-text {
+    padding-top: 100px;
+    padding-bottom: 50px;
+}
+
+header .intro-text .intro-lead-in {
+    margin-bottom: 25px;
+    font-family: $second_font;
+    font-size: 22px;
+    font-style: italic;
+    line-height: 22px;
+}
+
+header .intro-text .intro-heading {
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    font-family: $font_main;
+    font-size: 50px;
+    font-weight: 700;
+    line-height: 50px;
+}
+
+@media(min-width:768px) {
+    header .intro-text {
+        padding-top: 200px;
+        padding-bottom: 200px;
+    }
+
+    header .intro-text .intro-lead-in {
+        margin-bottom: 25px;
+        font-family: $second_font;
+        font-size: 40px;
+        font-style: italic;
+        line-height: 40px;
+    }
+
+    header .intro-text .intro-heading {
+        margin-bottom: 40px;
+        text-transform: uppercase;
+        font-family: $font_main;
+        font-size: 75px;
+        font-weight: 700;
+        line-height: 75px;
+    }
+}
