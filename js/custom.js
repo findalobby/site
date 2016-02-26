@@ -10,8 +10,10 @@ $(document).ready(function() {
 
   $('a#search_link').click(()=>{
     $('section#search').show();
-    $('header, nav').hide();
+    $('nav').hide();
   });
+
+  $('.slider').hide();
 
   $('span#close').click(searchClose);
   $('body').keydown((event) => {
