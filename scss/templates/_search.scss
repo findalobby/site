@@ -44,12 +44,6 @@
     float: left;
   }
 
-  // .one{
-  //   width: 100px;
-  //   height: 30px;
-  //   background-image: url(../../imgs/one.png);
-  // }
-
   .room{
     @include make-md-column(12);
     padding:10px;
@@ -71,10 +65,6 @@
     }
   }
 
-  .ola{
-    @include make-md-column-offset(0);
-  }
-
   #rooms{
     width:100%;
     height: auto;
@@ -82,7 +72,9 @@
   }
 
   .rooms-capacity{
-    float: right;
+    @media(min-width: 400px){
+      float: right;
+    }
   }
 
   .modo{
