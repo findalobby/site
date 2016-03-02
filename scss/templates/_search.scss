@@ -9,7 +9,6 @@
   right: 0;
   top: 0;
   bottom: 0;
-  z-index: 1000;
   display: none;
 
   span#close{
@@ -24,6 +23,7 @@
       cursor: pointer;
     }
   }
+
 
   #input_search{
     width: 100%;
@@ -84,25 +84,5 @@
   .modo{
     color: second_color(0.7);
   }
-
-  // .ps4{
-  //   background-color: rgba(0,64,152,0.9);
-  //   border:1px solid rgba(10, 59, 128, 1);
-  //   transition: background-color 0.5s;
-  //   &:hover{
-  //     transition: background-color 0.5s;
-  //     background-color: rgba(0,64,152,1);
-  //   }
-  // }
-  //
-  // .xbox{
-  //   background-color: rgba(15,123,14,0.9);
-  //   border:1px solid rgba(11, 92, 10, 1);
-  //   transition: background-color 0.5s;
-  //   &:hover{
-  //     transition: background-color 0.5s;
-  //     background-color: rgba(15,123,14,1);
-  //   }
-  // }
 
 }

@@ -57,7 +57,7 @@
           <div class="intro-text">
               <div class="intro-lead-in">Junte-se a outro jogadores!</div>
               <div class="intro-heading">Crie seu lobby ou pesquise por algum.</div>
-              <a class="page-scroll btn btn-xl">CRIAR LOBBY</a>
+              <a data-toggle="modal" data-target="#criar-sala" class="page-scroll btn btn-xl">CRIAR LOBBY</a>
           </div>
       </div>
   </header>
@@ -72,7 +72,40 @@
       </div>
     </div>
   </div>
-
 </section>
+<!-- Modal -->
+<div class="modal fade" id="criar-sala" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Criar sala</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="email">NOME DA SALA</label>
+            <input class="form-control" type="text" name="email" id="email" value="">
+        </div>
+        <div class="form-group ">
+            <label for="first_name">QUANTIDADE</label>
+            <input class="form-control" type="text" name="first_name" id="first_name" value="">
+        </div>
+        <div class="form-group ">
+            <label for="first_name">PLATAFORMA</label>
+            <select class="form-control">
+              <option>XBOX</option>
+              <option>PLAYSTATION</option>
+              <option>PC</option>
+              <option>ANDROID</option>
+              <option>IOS</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn_orange center-block">CRIAR</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

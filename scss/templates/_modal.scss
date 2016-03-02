@@ -1,0 +1,48 @@
+.modal-content{
+  background:second_color(0.8);
+
+  >.modal-header{
+    text-align: center;
+    border: none;
+    padding-bottom: 0;
+    >.modal-title{
+      font-family: $font_main;
+      font-size: 25px;
+      color: $font_color_main;
+      text-transform: uppercase;
+    }
+  }
+
+  >.modal-body{
+    padding: 0 15px;
+    >.form-group{
+
+      >.form-control{
+        &:focus{
+          outline: none;
+          border-color: rgba(255, 255, 255, 1);
+          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(255, 255, 255, 0.7);
+          outline: 0 none;
+        }
+      }
+
+      label{
+        font-family: $font_main;
+        color: $font_color_main;
+      }
+    }
+  }
+
+  >.modal-footer{
+    border: none;
+    padding-top: 0;
+    >.btn_orange{
+      background-color: color_main();
+      border: none;
+      outline: none;
+      font-family: $font_main;
+      color: $font_color_main;
+      padding: 10px 40px;
+    }
+  }
+}

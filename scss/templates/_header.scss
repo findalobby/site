@@ -27,7 +27,7 @@ header {
   color: $font_color_main;
   transition: all 1s;
   &:hover, &:focus{
-    background-color:rgb(214, 94, 16);
+    background-color:color_main();
     transition: all 1s;
     color:$font_color_main;
   }
