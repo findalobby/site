@@ -22,6 +22,12 @@ $(document).ready(function() {
       }
   });
 
+  $('.dropdown-menu > li').click(function() {
+    let path = $(this).attr('data');
+    $('#platforms').html('<img src="imgs/'+path+'">');
+    return false;
+  });
+
   setInterval(() =>{
     $('header').addClass("transitionBG");
     if(defaultBg ==  'url(../../imgs/bg1.jpg)'){
