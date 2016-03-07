@@ -3,28 +3,46 @@ $(document).ready(function() {
   'use strict';
 
   let defaultBg = 'url(../../imgs/bg1.jpg)';
-  const searchClose = () => {
-    $('section#search').hide();
-    $('header, nav').show();
-  };
 
-  $('a#search_link').click(()=>{
+  const changeScroll = () => {
+    if($('body').css('overflow') == 'visible'){
+        $('body').css('overflow', 'hidden');
+    }else{
+      $('body').css('overflow', 'visible');
+    }
+  }
+
+  let open = false;
+  const searchOpen = ()=>{
+    open = true;
     $('section#search').show();
     $('nav').hide();
-  });
+    changeScroll();
+  }
 
-  $('.slider').hide();
+  const searchClose = () => {
+    open = false;
+    $('section#search').hide();
+    $('header, nav').show();
+    changeScroll();
+  }
 
+  $('a#search_link').click(searchOpen);
   $('span#close').click(searchClose);
-  $('body').keydown((event) => {
-      if(event.which == 27){
+
+  $('body').keydown(e =>{
+      if(e.which == 27 && open){
         searchClose();
       }
-  });
+   });
+
+  $('#criar-sala').on('show.bs.modal', e => changeScroll());
+  $('#criar-sala').on('hidden.bs.modal', e => changeScroll());
 
   $('.dropdown-menu > li').click(function() {
     let path = $(this).attr('data');
-    $('#platforms').html('<img src="imgs/'+path+'">');
+    $('.platforms').html('<img src="imgs/'+path+'">');
+    $('.dropdown').removeClass('open');
     return false;
   });
 

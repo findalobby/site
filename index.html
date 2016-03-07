@@ -9,9 +9,6 @@
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
   <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-  <script type="text/javascript" src="js/vendors/jquery.js"></script>
-  <script type="text/javascript" src="js/vendors/bootstrap.min.js"></script>
-  <script type="text/javascript" src="js/custom.js"></script>
 </head>
 <body>
   <!-- Navigation -->
@@ -66,13 +63,56 @@
 
   <span id="close"> X </span>
   <input id="input_search" placeholder="Busque sua sala" type="text">
-  <div id="all_plataforms"></div>
+  <div id="teste_plata" class="dropdown">
+    <div class="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
+  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+    <li class="li_dropdown" data="one.png"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+    <li class="li_dropdown" data="360.png"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
+    <li class="li_dropdown" data="one.png"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+  </ul>
+</div>
   <div class="rooms">
     <div class="container">
-        <div class="content">
+        <div class="content" id="inside_rooms">
           <div class="room">
           <img class="icon_room" src="imgs/one.png">GTA V - <span class="modo">TDM</span>
           <div class="rooms-capacity">20/30</div></div>
+
+          <div class="room">
+          <img class="icon_room" src="imgs/360.png">BLACK OPS 3 - <span class="modo">ZOMBIES</span>
+          <div class="rooms-capacity">6/12</div></div>
+
+          <div class="room">
+          <img class="icon_room" src="imgs/360.png">BLACK OPS 3 - <span class="modo">ZOMBIES</span>
+          <div class="rooms-capacity">6/12</div></div>
+
+          <div class="room">
+          <img class="icon_room" src="imgs/360.png">BLACK OPS 3 - <span class="modo">ZOMBIES</span>
+          <div class="rooms-capacity">6/12</div></div>
+
+          <div class="room">
+          <img class="icon_room" src="imgs/360.png">BLACK OPS 3 - <span class="modo">ZOMBIES</span>
+          <div class="rooms-capacity">6/12</div></div>
+
+          <div class="room">
+          <img class="icon_room" src="imgs/360.png">BLACK OPS 3 - <span class="modo">ZOMBIES</span>
+          <div class="rooms-capacity">6/12</div></div>
+
+          <div class="room">
+          <img class="icon_room" src="imgs/360.png">BLACK OPS 3 - <span class="modo">ZOMBIES</span>
+          <div class="rooms-capacity">6/12</div></div>
+
+          <div class="room">
+          <img class="icon_room" src="imgs/360.png">BLACK OPS 3 - <span class="modo">ZOMBIES</span>
+          <div class="rooms-capacity">6/12</div></div>
+
+          <div class="room">
+          <img class="icon_room" src="imgs/360.png">BLACK OPS 3 - <span class="modo">ZOMBIES</span>
+          <div class="rooms-capacity">6/12</div></div>
+
+          <div class="room">
+          <img class="icon_room" src="imgs/360.png">BLACK OPS 3 - <span class="modo">ZOMBIES</span>
+          <div class="rooms-capacity">6/12</div></div>
 
           <div class="room">
           <img class="icon_room" src="imgs/360.png">BLACK OPS 3 - <span class="modo">ZOMBIES</span>
@@ -126,7 +166,7 @@
       <div class="container">
         <div id="rooms-text">SALAS
           <div class="dropdown">
-            <div id="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
+            <div class="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
           <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
             <li class="li_dropdown" data="one.png"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
             <li class="li_dropdown" data="360.png"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
@@ -146,5 +186,8 @@
       </div>
     </div>
 </section>
+<script type="text/javascript" src="js/vendors/jquery.js"></script>
+<script type="text/javascript" src="js/vendors/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/custom.js"></script>
 </body>
 </html>
