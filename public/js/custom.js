@@ -2,6 +2,34 @@ $(document).ready(function() {
 
   'use strict';
 
+  var socket = io();
+  let lastData = false;
+
+  socket.on('news rooms', (data) => {
+      if(!lastData){lastData = data;}
+      if(data != lastData){
+        $('#news_rooms').html('');
+        data.forEach((room) => {
+            $('#news_rooms').append('<div id="'+room._id+'" class="room"><img class="icon_room" src="imgs/360.png">'+room.game+' - <span class="modo">'+room.name+'</span> <div class="rooms-capacity">0/'+room.max_players+'</div></div>');
+        });
+      }
+  });
+
+  socket.on('search response', (data) => {
+        $('#inside_rooms').html('');
+        data.forEach((room) => {
+            $('#inside_rooms').append('<div id="'+room._id+'" class="room"><img class="icon_room" src="imgs/360.png">'+room.game+' - <span class="modo">'+room.name+'</span> <div class="rooms-capacity">0/'+room.max_players+'</div></div>');
+        });
+  });
+
+
+  $('#input_search').keydown(function(){
+      const valueInput = $(this).val();
+      console.log($('#input_search').val());
+      socket.emit('search', valueInput);
+  });
+
+
   let defaultBg = 'url(../../imgs/bg1.jpg)';
 
   const changeScroll = () => {
@@ -24,6 +52,7 @@ $(document).ready(function() {
     open = false;
     $('section#search').hide();
     $('header, nav').show();
+    $('#inside_rooms').html('');
     changeScroll();
   }
 
@@ -34,6 +63,17 @@ $(document).ready(function() {
       if(e.which == 27 && open){
         searchClose();
       }
+   });
+
+   $('form[name="create_room"]').submit(function() {
+      const data = {};
+      data.name = $('#name').val();
+      data.max_players = $('#limit').val();
+      data.game = $('#game').val();
+      data.platform = $('select#plataform option:selected').val();
+      socket.emit('create room', data);
+    //  $('#close_room').click();
+      return false;
    });
 
   $('#criar-sala').on('show.bs.modal', e => changeScroll());

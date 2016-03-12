@@ -21,6 +21,8 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/paulo_roberto_/findalobby#readme",
   "dependencies": {
-    "express": "^4.13.4"
+    "express": "^4.13.4",
+    "mongoose": "^4.4.6",
+    "socket.io": "^1.4.5"
   }
 }
