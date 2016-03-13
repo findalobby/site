@@ -20,31 +20,49 @@ const room = mongoose.model('rooms', schemaRoom);
 
 app.use(express.static('public'));
 
-io.on('connection', (socket) => {
-  console.log('a user connected');
-
-  setInterval(() => {
-    room.find({}, (err, data) => {
-        io.emit('news rooms', data);
+const emitRooms = (emitter) => {
+  room.find({}, (err, data) => {
+      emitter.emit('news rooms', data);
     });
-  }, 5000);
+  }
 
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
+  io.on('connection', (socket) => {
+    console.log('a user connected');
 
-  socket.on('search', (value) => {
-    room.find({$or: [ {name:new RegExp(value, "i")}, {game:new RegExp(value, "i")} ]}, (err, data) => {
-        socket.emit('search response', data);
-    });
-  });
 
-  socket.on('create room', (value) => {
-      room.create(value, (err, data) => {
-        console.log(data);
+    setInterval(() => {
+      room.find({}, (err, data) => {
+          io.emit('news rooms', data);
       });
-  });
+    }, 1000);
 
+
+
+    socket.on('disconnect', function(){
+      console.log('user disconnected');
+    });
+
+    socket.on('search', (data) => {
+      const searchName = {};
+      const searchGame = {};
+
+      searchName.name = new RegExp(data.input, "i");
+      searchGame.game = new RegExp(data.input, "i");
+      if(data.platform) {
+        searchName.platform = data.platform;
+        searchGame.platform = data.platform;
+      };
+
+      room.find({$or: [ searchName, searchGame ]}, (err, data) => {
+          socket.emit('search response', data);
+      });
+    });
+
+    socket.on('create room', (value) => {
+        room.create(value, (err, data) => {
+          socket.emit('room response',data);
+        });
+    });
 });
 
 http.listen(3000, function(){

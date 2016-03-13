@@ -4,6 +4,7 @@ $(document).ready(function() {
 
   var socket = io();
   let lastData = false;
+  let selected = '';
 
   socket.on('news rooms', (data) => {
       if(!lastData){lastData = data;}
@@ -22,11 +23,17 @@ $(document).ready(function() {
         });
   });
 
+  socket.on('room response', (data) => {
+      if(typeof data === 'object')
+      $('#close_room').click();
+  });
+
 
   $('#input_search').keydown(function(){
       const valueInput = $(this).val();
       console.log($('#input_search').val());
-      socket.emit('search', valueInput);
+      console.log(selected);
+      socket.emit('search', {input: valueInput, platform: selected});
   });
 
 
@@ -72,7 +79,6 @@ $(document).ready(function() {
       data.game = $('#game').val();
       data.platform = $('select#plataform option:selected').val();
       socket.emit('create room', data);
-    //  $('#close_room').click();
       return false;
    });
 
@@ -80,6 +86,7 @@ $(document).ready(function() {
   $('#criar-sala').on('hidden.bs.modal', e => changeScroll());
 
   $('.dropdown-menu > li').click(function() {
+    selected = $(this).attr('name');
     let path = $(this).attr('data');
     $('.platforms').html('<img src="imgs/'+path+'">');
     $('.dropdown').removeClass('open');

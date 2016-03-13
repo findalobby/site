@@ -66,9 +66,9 @@
   <div id="teste_plata" class="dropdown">
     <div class="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
   <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-    <li class="li_dropdown" data="one.png"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
-    <li class="li_dropdown" data="360.png"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
-    <li class="li_dropdown" data="one.png"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+    <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+    <li class="li_dropdown" data="360.png" name="XBOX 360"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
+    <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
   </ul>
 </div>
   <div class="rooms">
@@ -90,20 +90,21 @@
         <form method="POST" action="" name="create_room">
           <div class="form-group">
               <label for="email">NOME DA SALA</label>
-              <input class="form-control" type="text" name="name" id="name" value="">
+              <input class="form-control" required type="text" name="name" id="name" value="">
           </div>
           <div class="form-group ">
               <label for="first_name">QUANTIDADE</label>
-              <input class="form-control" type="text" name="limit" id="limit" value="">
+              <input class="form-control" required type="text" name="limit" id="limit" value="">
           </div>
           <div class="form-group">
               <label for="email">JOGO</label>
-              <input class="form-control" type="text" name="game" id="game" value="">
+              <input class="form-control" required type="text" name="game" id="game" value="">
           </div>
           <div class="form-group">
               <label for="first_name">PLATAFORMA</label>
               <select class="form-control" name="platform" id="plataform">
-                <option>XBOX</option>
+                <option>XBOX 360</option>
+                <option>XBOX ONE</option>
                 <option>PLAYSTATION</option>
                 <option>PC</option>
                 <option>ANDROID</option>
@@ -127,9 +128,9 @@
           <div class="dropdown">
             <div class="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
           <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-            <li class="li_dropdown" data="one.png"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
-            <li class="li_dropdown" data="360.png"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
-            <li class="li_dropdown" data="one.png"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+            <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+            <li class="li_dropdown" data="360.png" name="XBOX 360"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
+            <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
           </ul>
         </div>
         </div>
