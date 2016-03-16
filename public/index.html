@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Find a lobby</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2d2d2d">
+  <link rel="stylesheet" type="text/css" href="css/vendors/bootstrap/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+  <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header page-scroll">
+              <button type="button" class="toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand page-scroll" href="#page-top"><img src="imgs/logo4.png" width="30" height="30" alt=""></a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav navbar-right">
+                  <li class="hidden">
+                      <a href="#page-top"></a>
+                  </li>
+                  <li>
+                      <a class="page-scroll" href="#">Home</a>
+                  </li>
+                  <li>
+                      <a class="page-scroll" data-toggle="modal" data-target="#room-chat" href="#">Salas</a>
+                  </li>
+                  <li>
+                      <a class="page-scroll" href="#">Sobre</a>
+                  </li>
+                  <li>
+                      <a class="page-scroll" id="search_link" href="#">Buscar</a>
+                  </li>
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+  <!-- Header -->
+  <header>
+      <div class="container">
+          <div class="intro-text">
+              <div class="intro-lead-in">Junte-se a outro jogadores!</div>
+              <div class="intro-heading">Crie seu lobby ou pesquise por algum.</div>
+              <a data-toggle="modal" data-target="#criar-sala" class="page-scroll btn btn-xl">CRIAR LOBBY</a>
+          </div>
+      </div>
+  </header>
+<section id="search">
+
+  <span id="close"> X </span>
+  <input id="input_search" placeholder="Busque sua sala" type="text">
+  <div id="teste_plata" class="dropdown">
+    <div class="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
+  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+    <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+    <li class="li_dropdown" data="360.png" name="XBOX 360"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
+    <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+  </ul>
+</div>
+  <div class="rooms">
+    <div class="container">
+        <div class="content" id="inside_rooms">
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Modal create room -->
+<div class="modal fade" id="criar-sala" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" id="close_room" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Criar sala</h4>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="" name="create_room">
+          <div class="form-group">
+              <label for="email">NOME DA SALA</label>
+              <input class="form-control" required type="text" name="name" id="name">
+          </div>
+          <div class="form-group ">
+              <label for="first_name">QUANTIDADE</label>
+              <input class="form-control" required type="text" name="limit" id="limit">
+          </div>
+          <div class="form-group">
+              <label for="email">JOGO</label>
+              <input class="form-control" required type="text" name="game" id="game">
+          </div>
+          <div class="form-group">
+              <label for="first_name">PLATAFORMA</label>
+              <select class="form-control" name="platform" id="plataform">
+                <option>XBOX 360</option>
+                <option>XBOX ONE</option>
+                <option>PLAYSTATION</option>
+                <option>PC</option>
+                <option>ANDROID</option>
+                <option>IOS</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="submit" value="CRIAR" class="btn btn-primary btn_orange center-block">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<section id="menu-rooms">
+    <div class="rooms">
+      <div class="container">
+        <div id="rooms-text">SALAS
+          <div class="dropdown">
+            <div class="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
+          <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+            <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+            <li class="li_dropdown" data="360.png" name="XBOX 360"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
+            <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+          </ul>
+        </div>
+        </div>
+          <div class="content" id="news_rooms">
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<section id="chat-room">
+  <div class="container-fluid">
+    <div class="content">
+      <div id="toggle-people">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+      <div id="people-in-the-room">
+          <img src="imgs/one.png" alt="Xbox one" title="Xbox one">
+          <h3>BO2<br><span class="name-room">ZOMBIES</span></h3>
+          <div class="user-in-room">Paulo Roberto</div>
+          <div class="user-in-room">Paulo Roberto</div>
+          <div class="user-in-room">Paulo Roberto</div>
+      </div>
+      <div id="messages">
+      </div>
+  </div>
+</div>
+</section>
+
+<script type="text/javascript" src="js/vendors/jquery.js"></script>
+<script type="text/javascript" src="js/vendors/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/vendors/socket.js"></script>
+<script type="text/javascript" src="js/custom.js"></script>
+</body>
+</html>

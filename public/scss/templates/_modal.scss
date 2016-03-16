@@ -13,25 +13,25 @@
     }
   }
 
-  >.modal-body{
-    padding: 0 15px;
-    >.form-group{
-
-      >.form-control{
-        &:focus{
-          outline: none;
-          border-color: rgba(255, 255, 255, 1);
-          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(255, 255, 255, 0.7);
-          outline: 0 none;
-        }
-      }
-
-      label{
-        font-family: $font_main;
-        color: $font_color_main;
+  .form-group{
+    >label{
+      font-family: $font_main;
+      color: $font_color_main;
+    }
+    >.form-control{
+      &:focus{
+        outline: none;
+        border-color: rgba(255, 255, 255, 1);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(255, 255, 255, 0.7);
+        outline: 0 none;
       }
     }
   }
+
+  >.modal-body{
+    padding: 0 15px
+  }
+
 
   >.modal-footer{
     border: none;

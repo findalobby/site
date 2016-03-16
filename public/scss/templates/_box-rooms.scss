@@ -20,11 +20,14 @@
         transition: background-color 0.5s;
         font-size: 18px;
         vertical-align: center;
+        text-align: center;
+        line-height: 35px;
+
 
         @media (max-width: 565px){
           padding-top: 0;
-          }
 
+        }
 
         >.rooms-capacity{
           @include make-xs-column(1);
