@@ -63,6 +63,10 @@ $(document).ready(function() {
     changeScroll();
   }
 
+  $('#toggle-people').click(function() {
+    $('#people-in-the-room').toggle('slide');
+  });
+
   $('a#search_link').click(searchOpen);
   $('span#close').click(searchClose);
 

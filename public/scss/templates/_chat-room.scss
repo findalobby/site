@@ -1,0 +1,126 @@
+#chat-room{
+  background: second_color(0.8);
+  width:      100%;
+  height:     100%;
+  z-index:    1000;
+  position:   fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow: auto;
+  //display: none;
+
+  .navbar-toggle{
+    float: left;
+  }
+
+  #toggle-people{
+    padding: 10px;
+    background-color: color_main();
+    position: absolute;
+    top:5px;
+    left: 5px;
+    z-index: 500;
+    float: left;
+    border-radius: 2px;
+    color: $font_color_main;
+    border: 1px solid $font_color_main;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .icon-bar{
+    display: block;
+    width: 22px;
+    height: 2px;
+    border-radius: 1px;
+    background-color: #fff;
+    margin-bottom: 4px;
+    &:last-child{
+      margin-bottom: 0;
+    }
+  }
+
+  #people-in-the-room{
+    display: none;
+    @include make-md-column(2.5);
+    position: absolute;
+    height:100%;
+    z-index: 10;
+    padding-left: 0;
+    padding-right: 0;
+    float: left;
+    text-align: center;
+    background-color:second_color();
+    overflow: auto;
+    -webkit-box-shadow: 7px 0 100px -2px #000;
+    box-shadow: 7px 0 100px -2px #000;
+
+    >h3{
+      color:$font_color_main;
+      font-family: $font_main;
+      text-transform: uppercase;
+      font-size: 15px;
+      font-weight: bold;
+      margin-top: 0;
+      margin-bottom: 15px;
+      line-height: 20px;
+      >.name-room{
+        color:color_main();
+      }
+    }
+
+    >img{
+      width: 64px;
+      height: 64px;
+      display: block;
+      margin: 15px auto;
+      cursor: pointer;
+    }
+
+    >.user-in-room{
+      width:100%;
+      padding:15px 0;
+      background-color: color_main();
+      padding:5px 0;
+      margin-bottom: 10px;
+      font-family: $font_main;
+      color: $font_color_main;
+      text-align: center;
+      font-size: 13px;
+    }
+
+  }
+
+  #messages{
+    @include make-md-column(9.5);
+    @include make-md-column-offset(2.5);
+    position: absolute;
+    height:100%;
+    float: right;
+  //  background-color:#fff;
+    >#send-msg{
+      width:70%;
+      height: 50px;
+      float: right;
+      outline: none;
+      border: none;
+      border-radius: 2px;
+    }
+    >.message{
+      padding:10px;
+      float: right;
+      background-color: color_main(0.9);
+      color:$font_color_main;
+      border-radius:2px;
+      margin-bottom: 5px;
+    }
+    >.me{
+      background-color: second_color();
+    }
+  }
+
+}
