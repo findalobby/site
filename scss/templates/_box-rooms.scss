@@ -6,34 +6,73 @@
     >.content{
       >.room{
         @include make-md-column(12);
+
+        height: 60px;
         padding:10px;
-        position: relative;
+        // position: relative;
         color: $font_color_main;
         text-transform: uppercase;
-        font-weight: bold;
         font-family: $font_main;
         margin-bottom: 10px;
         border-radius: 2px;
         background-color: color_main(0.8);
         cursor: pointer;
         transition: background-color 0.5s;
-        text-align: center;
-        line-height: 35px;
+        font-size: 18px;
+        vertical-align: center;
+
+        @media (max-width: 565px){
+          padding-top: 0;
+          }
+
 
         >.rooms-capacity{
-          @media(min-width: 400px){
-            float: right;
-          }
+          @include make-xs-column(1);
+          @include make-sm-column(1);
+          @include make-md-column(1);
+
+          @include make-xs-column-offset(1);
+          @include make-sm-column-offset(1);
+          @include make-md-column-offset(1);
+         
+         text-align: center;
+         margin-top: 7.5px;
         }
 
+        .game{
+          @include make-xs-column(3);
+          @include make-sm-column(3);
+          @include make-md-column(2);
+
+          @include make-xs-column-offset(0);
+          @include make-sm-column-offset(1);
+          @include make-md-column-offset(2);
+
+          text-align: center;
+          margin-top: 7.5px;
+        }
+
+
         >.icon_room{
-          width: 30px;
-          height: 30px;
+          width: 40px;
+          height: 40px;
           float: left;
+
         }
 
         .modo{
-          color: second_color(0.7);
+          @include make-xs-column(5);
+          @include make-sm-column(4);
+          @include make-md-column(4);
+
+          @include make-sm-column-offset(1);
+          @include make-md-column-offset(1);
+
+          color: second_color();
+          text-align: center;
+          vertical-align: center;
+          margin-top: 7.5px;
+
         }
 
         &:hover{

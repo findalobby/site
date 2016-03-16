@@ -41,17 +41,30 @@
     z-index: 999;
   }
 
-  span#close{
+  #close-bg{
     font-family: $font_main;
     color: $font_color_main;
-    font-size: 50px;
     float: right;
-    margin-top: -7px;
     margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    background-color: color_main();
+          border: 2px solid color_main();
+    border-radius: 2px;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    transition: 0.8s;
     &:hover{
-      text-decoration: underline;
+      background-color: second_color();
+      transition: 1s;
       cursor: pointer;
     }
+
+  }
+
+  span#close{
+    font-size: 35px;
   }
 
 
