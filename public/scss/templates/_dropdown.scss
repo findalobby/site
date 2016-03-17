@@ -35,6 +35,7 @@
       color: $font_color_main;
       font-family: $font_main;
       font-size: 30px;
+      padding: 2.5px;
       text-align: center;
       cursor: pointer;
       @include hover-base();

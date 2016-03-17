@@ -48,6 +48,8 @@ $(document).ready(function() {
   }
 
   let open = false;
+
+
   const searchOpen = ()=>{
     open = true;
     $('section#search').show();
@@ -58,10 +60,15 @@ $(document).ready(function() {
   const searchClose = () => {
     open = false;
     $('section#search').hide();
+    $('section#chat-room').hide();
     $('header, nav').show();
     $('#inside_rooms').html('');
     changeScroll();
   }
+
+  $('#close-btn').click(() => {
+    alert('lalala');
+  });
 
   $('#toggle-people').click(function() {
     $('#people-in-the-room').toggle('slide');
@@ -71,8 +78,12 @@ $(document).ready(function() {
   $('span.close-btn').click(searchClose);
 
   $('body').keydown(e =>{
-      if(e.which == 27 && open){
-        searchClose();
+      if(e.which == 27){
+        if(open){
+          searchClose();
+        }
+        $('section#chat-room').hide();
+        $('nav').show();
       }
    });
 

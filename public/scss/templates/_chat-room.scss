@@ -8,11 +8,32 @@
   right: 0;
   top: 0;
   bottom: 0;
-// display: none;
+  //display: none;
 
   .navbar-toggle{
     float: left;
   }
+
+  #close-btn{
+      font-family: $font_main;
+      color: $font_color_main;
+      font-size: 35px;
+      text-align: center;
+      float: right;
+      margin-left: 50px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      background-color: color_main();
+      border-radius: 2px;
+      width: 50px;
+      height: 50px;
+      clear: both;
+      z-index: 1000;
+      &:hover{
+        color: #000;
+      }
+      //@include hover-base();
+    }
 
   #toggle-people{
     padding: 10px;
@@ -46,6 +67,8 @@
 
   #people-in-the-room{
     display: none;
+    @include make-xs-column(12);
+    @include make-sm-column(12);
     @include make-md-column(2.5);
     position: absolute;
     z-index: 3;
@@ -106,7 +129,6 @@
     border: none;
     outline: none;
     padding:5px;
-    border-radius: 5px;
     font-family: $font_main;
     color:$font_color_main;
   }
@@ -117,14 +139,17 @@
   }
 
   #messages{
+    @include make-xs-column(12);
+    @include make-sm-column(12);
     @include make-md-column(12);
     position: absolute;
     height: 100%;
     overflow: auto;
-    //background-color:#fff;
-    >.msg{
-      @include make-md-column(11);
-      @include make-md-column-offset(1);
+
+    .msg{
+      @include make-xs-column(12);
+      @include make-sm-column(12);
+      @include make-md-column(12);
       padding:7px;
       background-color: color_main();
       font-family: $font_main;
@@ -135,9 +160,10 @@
       text-align: left;
       >.user-send{
         color: second_color();
+        font-weight: bold;
       }
     }
-    >.me{
+    .me{
       background-color: second_color();
       color: $font_color_main;
     }
