@@ -8,8 +8,7 @@
   right: 0;
   top: 0;
   bottom: 0;
-  overflow: auto;
-  //display: none;
+// display: none;
 
   .navbar-toggle{
     float: left;
@@ -17,7 +16,7 @@
 
   #toggle-people{
     padding: 10px;
-    background-color: color_main();
+    background-color: color_main(1);
     position: absolute;
     top:5px;
     left: 5px;
@@ -30,6 +29,7 @@
     font-weight: bold;
     text-align: center;
     cursor: pointer;
+    @include hover-base();
   }
 
   .icon-bar{
@@ -48,8 +48,7 @@
     display: none;
     @include make-md-column(2.5);
     position: absolute;
-    height:100%;
-    z-index: 10;
+    z-index: 3;
     padding-left: 0;
     padding-right: 0;
     float: left;
@@ -91,35 +90,56 @@
       color: $font_color_main;
       text-align: center;
       font-size: 13px;
+      &:last-child{
+        margin-bottom: 0;
+      }
     }
 
   }
 
-  #messages{
-    @include make-md-column(9.5);
-    @include make-md-column-offset(2.5);
+  #text-msg{
+    width: 100%;
+    height: 50px;
     position: absolute;
-    height:100%;
-    float: right;
-  //  background-color:#fff;
-    >#send-msg{
-      width:70%;
-      height: 50px;
-      float: right;
-      outline: none;
-      border: none;
-      border-radius: 2px;
+    bottom: 0;
+    background-color:second_color();
+    border: none;
+    outline: none;
+    padding:5px;
+    border-radius: 5px;
+    font-family: $font_main;
+    color:$font_color_main;
+  }
+  .form-control{
+    &:focus{
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(0, 0, 0, 0.7);
     }
-    >.message{
-      padding:10px;
+  }
+
+  #messages{
+    @include make-md-column(12);
+    position: absolute;
+    height: 100%;
+    overflow: auto;
+    //background-color:#fff;
+    >.msg{
+      @include make-md-column(11);
+      @include make-md-column-offset(1);
+      padding:7px;
+      background-color: color_main();
+      font-family: $font_main;
+      color: $font_color_main;
+      border-radius: 2px;
+      margin:2.5px auto;
       float: right;
-      background-color: color_main(0.9);
-      color:$font_color_main;
-      border-radius:2px;
-      margin-bottom: 5px;
+      text-align: left;
+      >.user-send{
+        color: second_color();
+      }
     }
     >.me{
       background-color: second_color();
+      color: $font_color_main;
     }
   }
 

@@ -1,0 +1,9 @@
+@mixin hover-base(){
+  transition: 1s;
+  border: 2px solid color_main();
+  &:hover{
+    background-color: second_color();
+    transition: 1s;
+    cursor: pointer;
+  }
+}

@@ -68,7 +68,7 @@ $(document).ready(function() {
   });
 
   $('a#search_link').click(searchOpen);
-  $('span#close').click(searchClose);
+  $('span.close-btn').click(searchClose);
 
   $('body').keydown(e =>{
       if(e.which == 27 && open){
