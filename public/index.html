@@ -63,20 +63,33 @@
 
   <span class="close-btn"> X </span>
   <input id="input_search" placeholder="Busque sua sala" type="text">
-  <div id="dropdown-search" class="dropdown">
-    <div class="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
-  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-    <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
-    <li class="li_dropdown" data="360.png" name="XBOX 360"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
-    <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+<div id="dropdown-search" class="dropdown">
+  <div class="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
+    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+      <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+      <li class="li_dropdown" data="360.png" name="XBOX 360"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
+      <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
   </ul>
 </div>
-  <div class="rooms">
-    <div class="container">
-        <div class="content" id="inside_rooms">
-      </div>
+
+<div class="container">
+  <div class="content">
+    <div class="room">
+      <div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div>
+      <div class="room-game">black ops 3</div>
+      <div class="room-mode">domination</div>
+      <div class="room-capacity">1/12</div>
+    </div>
+
+    <div class="room">
+      <div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div>
+      <div class="room-game">black ops 3</div>
+      <div class="room-mode">domination</div>
+      <div class="room-capacity">1/12</div>
     </div>
   </div>
+</div>
+
 </section>
 <!-- Modal create room -->
 <div class="modal fade" id="criar-sala" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -121,23 +134,36 @@
 </div>
 
 <section id="menu-rooms">
-    <div class="rooms">
-      <div class="container">
-        <div id="rooms-text">SALAS
-          <div class="dropdown">
-            <div class="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
-          <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-            <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
-            <li class="li_dropdown" data="360.png" name="XBOX 360"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
-            <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
-          </ul>
-        </div>
-        </div>
-          <div class="content" id="news_rooms">
-          </div>
-        </div>
-      </div>
+  <div class="container">
+  <div id="space" class="content">
+    <span id="text-menu-rooms">salas</span>
+    <div id="dropdown-search" class="dropdown">
+      <div class="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
+      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+        <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+        <li class="li_dropdown" data="360.png" name="XBOX 360"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
+        <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
+      </ul>
     </div>
+    </div>
+
+    <div class="content">
+      <div class="room">
+        <div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div>
+        <div class="room-game">black ops 3</div>
+        <div class="room-mode">domination</div>
+        <div class="room-capacity">1/12</div>
+      </div>
+
+      <div class="room">
+      <div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div>
+      <div class="room-game">black ops 3</div>
+      <div class="room-mode">domination</div>
+      <div class="room-capacity">1/12</div>
+    </div>
+    
+    </div>
+  </div>
 </section>
 
 <section id="chat-room">
