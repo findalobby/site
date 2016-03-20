@@ -55,7 +55,7 @@
           <div class="intro-text">
               <div class="intro-lead-in">Junte-se a outro jogadores!</div>
               <div class="intro-heading">Crie seu lobby ou pesquise por algum.</div>
-              <a data-toggle="modal" data-target="#criar-sala" class="page-scroll btn btn-xl">CRIAR LOBBY</a>
+              <a id="btn-create-room" class="page-scroll btn btn-xl">CRIAR LOBBY</a>
           </div>
       </div>
   </header>
@@ -147,6 +147,28 @@
     </div>
     </div>
 
+    <!-- Modal gamertag -->
+    <div class="modal fade" id="save-gamertag" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" id="close_room" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Gamertag</h4>
+          </div>
+          <div class="modal-body">
+            <form method="POST" action="" name="save_gamertag">
+              <div class="form-group">
+                  <input class="form-control" required type="text" name="gamertag" id="gamertag">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <input type="submit" value="SALVAR" class="btn btn-primary btn_orange center-block">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div class="content" id="news_rooms">
       <div class="room">
         <div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div>
@@ -188,8 +210,8 @@
           <div class="msg me">Dig din</div>
         </div>
       </div>
-      <form method="POST" name="msg-chat">
-        <input type="text" placeholder="Sua mensagem..." class="form-control" id="text-msg">
+      <form method="POST" name="msg-chat" autocomplete="off">
+        <input type="text" value="" placeholder="Sua mensagem..." name="msg" class="form-control" id="text-msg">
       </form>
   </div>
 </div>

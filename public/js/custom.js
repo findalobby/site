@@ -6,6 +6,7 @@ $(document).ready(function() {
   let lastData = false;
   let selected = '';
   let idRoom = '';
+  let gamertag = '';
 
   socket.on('news rooms', (data) => {
       if(!lastData){lastData = data;}
@@ -21,16 +22,38 @@ $(document).ready(function() {
     const msg = $('#text-msg').val();
     const data = {
       msg,
+      gamertag,
       idRoom
     }
-    socket.emit('send msg', data);
-    $('#inside_msg').append('<div class="msg me">'+msg+'</div>');
-    $('#text-msg').val('');
-    return false;
+    if(msg && gamertag){
+      socket.emit('send msg', data);
+      $('#inside_msg').append('<div class="msg me">'+msg+'</div>');
+      $('#text-msg').val('');
+    }
+    return false
   });
 
+
+   $('form[name="create_room"]').submit(function() {
+      const data = {};
+      data.name = $('#name').val();
+      data.max_players = $('#limit').val();
+      data.game = $('#game').val();
+      data.platform = $('select#plataform option:selected').val();
+      socket.emit('create room', data);
+      return false;
+   });
+
+   $('form[name="save_gamertag"]').submit(() => {
+     $('#save-gamertag').modal('hide');
+     gamertag = $('#gamertag').val();
+     return false;
+   });
+
+
+
   socket.on('new msg', (data) => {
-    $('#inside_msg').append('<div class="msg"><span class="user-send">Batata:</span> '+data+'</div>');
+    $('#inside_msg').append('<div class="msg"><span class="user-send">'+data.gamertag+':</span> '+data.msg+'</div>');
   });
 
 
@@ -41,6 +64,10 @@ $(document).ready(function() {
       $('nav').hide();
       $('#inside_msg').html('');
       $('#chat-room').fadeIn('fast');
+
+      if(!gamertag){
+        $('#save-gamertag').modal('show');
+      }
   });
 
   socket.on('search response', (data) => {
@@ -112,14 +139,11 @@ $(document).ready(function() {
       }
    });
 
-   $('form[name="create_room"]').submit(function() {
-      const data = {};
-      data.name = $('#name').val();
-      data.max_players = $('#limit').val();
-      data.game = $('#game').val();
-      data.platform = $('select#plataform option:selected').val();
-      socket.emit('create room', data);
-      return false;
+   $('#btn-create-room').click(() => {
+     $('#criar-sala').modal('show');
+     if(!gamertag){
+          $('#save-gamertag').modal('show');
+     }
    });
 
   $('#criar-sala').on('show.bs.modal', e => changeScroll());

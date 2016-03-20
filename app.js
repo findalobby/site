@@ -69,7 +69,7 @@ const emitRooms = (emitter) => {
     });
 
     socket.on('send msg', (data) => {
-      socket.broadcast.to(data.idRoom).emit('new msg', data.msg);
+      socket.broadcast.to(data.idRoom).emit('new msg', {msg: data.msg, gamertag: data.gamertag});
     });
 
     socket.on('create room', (value) => {
