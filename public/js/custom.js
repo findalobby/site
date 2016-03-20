@@ -11,15 +11,15 @@ $(document).ready(function() {
       if(data != lastData){
         $('#news_rooms').html('');
         data.forEach((room) => {
-            $('#news_rooms').append('<div id="'+room._id+'" class="room"><img class="icon_room" src="imgs/360.png">'+room.game+' - <span class="modo">'+room.name+'</span> <div class="rooms-capacity">0/'+room.max_players+'</div></div>');
+            $('#news_rooms').append('<div class="room"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">1/'+room.max_players+'</div></div>');
         });
       }
   });
 
   socket.on('search response', (data) => {
-        $('#inside_rooms').html('');
+        $('#search_rooms').html('');
         data.forEach((room) => {
-            $('#inside_rooms').append('<div id="'+room._id+'" class="room"><img class="icon_room" src="imgs/360.png">'+room.game+' - <span class="modo">'+room.name+'</span> <div class="rooms-capacity">0/'+room.max_players+'</div></div>');
+              $('#search_rooms').append('<div class="room"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">1/'+room.max_players+'</div></div>');
         });
   });
 

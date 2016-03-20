@@ -17,6 +17,10 @@
       margin-top: 4px;
     }
 
+    #search_rooms{
+      clear: both;
+    }
+
     &::-webkit-scrollbar {
     width: 10px;
     }
@@ -41,6 +45,11 @@
     z-index: 999;
   }
 
+  #btn-search{
+    position: relative;
+    float:right;
+    z-index: 900;
+  }
 
   #input_search{
     width: 100%;
@@ -51,7 +60,6 @@
     font-size: 20px;
     border: none;
     position: absolute;
-    z-index: -100;
   }
 
 }
