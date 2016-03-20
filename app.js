@@ -4,6 +4,12 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const session = require('express-session');
+
+app.use(session({
+  cookieName: 'session',
+  secret: 'apir4985t943vujicoaç'
+}));
 
 mongoose.connect('mongodb://localhost/findalobby');
 const Schema = mongoose.Schema;
@@ -56,6 +62,14 @@ const emitRooms = (emitter) => {
       room.find({$or: [ searchName, searchGame ]}, (err, data) => {
           socket.emit('search response', data);
       });
+    });
+
+    socket.on('join room', (data) => {
+        socket.join(data['_id']);
+    });
+
+    socket.on('send msg', (data) => {
+      socket.broadcast.to(data.idRoom).emit('new msg', data.msg);
     });
 
     socket.on('create room', (value) => {

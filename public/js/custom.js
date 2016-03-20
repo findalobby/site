@@ -5,21 +5,48 @@ $(document).ready(function() {
   var socket = io();
   let lastData = false;
   let selected = '';
+  let idRoom = '';
 
   socket.on('news rooms', (data) => {
       if(!lastData){lastData = data;}
       if(data != lastData){
         $('#news_rooms').html('');
         data.forEach((room) => {
-            $('#news_rooms').append('<div class="room"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">1/'+room.max_players+'</div></div>');
+            $('#news_rooms').append('<div class="room" id="'+room._id+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">1/'+room.max_players+'</div></div>');
         });
       }
+  });
+
+  $('form[name="msg-chat"]').submit(() => {
+    const msg = $('#text-msg').val();
+    const data = {
+      msg,
+      idRoom
+    }
+    socket.emit('send msg', data);
+    $('#inside_msg').append('<div class="msg me">'+msg+'</div>');
+    $('#text-msg').val('');
+    return false;
+  });
+
+  socket.on('new msg', (data) => {
+    $('#inside_msg').append('<div class="msg"><span class="user-send">Batata:</span> '+data+'</div>');
+  });
+
+
+  $('.container > .content').on('click', '.room', function() {
+      const id = $(this).attr('id');
+      idRoom = id;
+      socket.emit('join room', {_id: id});
+      $('nav').hide();
+      $('#inside_msg').html('');
+      $('#chat-room').fadeIn('fast');
   });
 
   socket.on('search response', (data) => {
         $('#search_rooms').html('');
         data.forEach((room) => {
-              $('#search_rooms').append('<div class="room"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">1/'+room.max_players+'</div></div>');
+          $('#search_rooms').append('<div class="room" id="'+room._id+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">1/'+room.max_players+'</div></div>');
         });
   });
 
@@ -31,8 +58,6 @@ $(document).ready(function() {
 
   $('#input_search').keydown(function(){
       const valueInput = $(this).val();
-      console.log($('#input_search').val());
-      console.log(selected);
       socket.emit('search', {input: valueInput, platform: selected});
   });
 
