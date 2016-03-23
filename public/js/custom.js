@@ -7,26 +7,22 @@ $(document).ready(function() {
   let selected = '';
   let idRoom = '';
   let gamertag = '';
+  let join = false;
 
   socket.on('news rooms', (data) => {
       if(!lastData){lastData = data;}
       if(data != lastData){
         $('#news_rooms').html('');
         data.forEach((room) => {
-            $('#news_rooms').append('<div class="room" id="'+room._id+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">1/'+room.max_players+'</div></div>');
+            $('#news_rooms').append('<div class="room" id="'+room._id+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
         });
       }
   });
 
   $('form[name="msg-chat"]').submit(() => {
     const msg = $('#text-msg').val();
-    const data = {
-      msg,
-      gamertag,
-      idRoom
-    }
     if(msg && gamertag){
-      socket.emit('send msg', data);
+      socket.emit('send msg', msg);
       $('#inside_msg').append('<div class="msg me">'+msg+'</div>');
       $('#text-msg').val('');
     }
@@ -47,6 +43,9 @@ $(document).ready(function() {
    $('form[name="save_gamertag"]').submit(() => {
      $('#save-gamertag').modal('hide');
      gamertag = $('#gamertag').val();
+     if(join){
+      joinRoom(idRoom, gamertag);
+     }
      return false;
    });
 
@@ -56,17 +55,25 @@ $(document).ready(function() {
     $('#inside_msg').append('<div class="msg"><span class="user-send">'+data.gamertag+':</span> '+data.msg+'</div>');
   });
 
+  socket.on('new user', (data) => {
+      $('#users-on').append('<div class="user-in-room">'+data+'</div>');
+      $('#inside_msg').append('<div class="msg user-on">Usuário <span class="name-on">'+data+'</span> acabou de entrar!</div>');
+  });
+
 
   $('.container > .content').on('click', '.room', function() {
       const id = $(this).attr('id');
       idRoom = id;
-      socket.emit('join room', {_id: id});
       $('nav').hide();
       $('#inside_msg').html('');
+      $('#users-on').html('');
       $('#chat-room').fadeIn('fast');
 
       if(!gamertag){
         $('#save-gamertag').modal('show');
+        join = true;
+      } else {
+        joinRoom(idRoom, gamertag);
       }
   });
 
@@ -118,9 +125,7 @@ $(document).ready(function() {
     changeScroll();
   }
 
-  $('#close-btn').click(() => {
-    alert('lalala');
-  });
+  console.log(socket);
 
   $('#toggle-people').click(function() {
     $('#people-in-the-room').toggle('slide');
@@ -170,5 +175,10 @@ $(document).ready(function() {
       $('header').css("background-image", "url(../../imgs/bg1.jpg)");
     }
   }, 3000) ;
+
+  function joinRoom(_id, gamertag){
+    socket.emit('join room', {_id, gamertag});
+    $('#users-on').append('<div class="user-in-room">'+gamertag+'</div>');
+  }
 
 });

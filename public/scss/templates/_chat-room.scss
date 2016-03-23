@@ -100,7 +100,7 @@
       cursor: pointer;
     }
 
-    >.user-in-room{
+    .user-in-room{
       width:100%;
       padding:15px 0;
       background-color: color_main();
@@ -164,6 +164,15 @@
     .me{
       background-color: second_color();
       color: $font_color_main;
+    }
+    .user-on{
+      background-color: $font_color_main;
+      color: second_color();
+      text-transform: uppercase;
+      font-weight: bold;
+      .name-on{
+        color: color_main();
+      }
     }
   }
 
