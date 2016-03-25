@@ -8,6 +8,9 @@ $(document).ready(function() {
   let idRoom = '';
   let gamertag = '';
   let join = false;
+  let logMsg = [];
+  let inverter = 0;
+  let  waitLog = true;
 
   socket.on('news rooms', (data) => {
       if(!lastData){lastData = data;}
@@ -26,6 +29,11 @@ $(document).ready(function() {
       $('#inside_msg').append('<div class="msg me">'+msg+'</div>');
       $('#text-msg').val('');
     }
+    registerLog(logMsg,{
+          id: socket.id,
+          gamertag,
+          msg
+    });
     return false
   });
 
@@ -44,7 +52,7 @@ $(document).ready(function() {
      $('#save-gamertag').modal('hide');
      gamertag = $('#gamertag').val();
      if(join){
-      joinRoom(idRoom, gamertag);
+      joinRoom(idRoom, gamertag, socket);
      }
      return false;
    });
@@ -52,18 +60,53 @@ $(document).ready(function() {
 
 
   socket.on('new msg', (data) => {
-    $('#inside_msg').append('<div class="msg"><span class="user-send">'+data.gamertag+':</span> '+data.msg+'</div>');
+    $('#inside_msg').append('<div id="'+data.id+'" class="msg"><span class="user-send">'+data.gamertag+':</span> '+data.msg+'</div>');
+    registerLog(logMsg, data);
   });
 
   socket.on('new user', (data) => {
-      $('#users-on').append('<div class="user-in-room">'+data+'</div>');
-      $('#inside_msg').append('<div class="msg user-on">Usuário <span class="name-on">'+data+'</span> acabou de entrar!</div>');
+      $('#users-on').append('<div class="user-in-room" id="'+data.id+'">'+data.gamertag+'</div>');
+      $('#inside_msg').append('<div class="msg user-on">Usuário <span class="name-on">'+data.gamertag+'</span> acabou de entrar!</div>');
+      socket.emit('im online', data.id);
+      registerLog(logMsg, {
+        id: '/#online',
+        gamertag: data.gamertag,
+        msg: 'online'
+      });
+  });
+
+  socket.on('log users', (data) => {
+      $('#users-on').append('<div class="user-in-room" id="'+data.id+'">'+data.gamertag+'</div>');
+  });
+
+  socket.on('get msg', (data) => {
+    socket.emit('getting log', {to: data, log:logMsg});
+    console.log(logMsg);
+  });
+
+  socket.on('recive log', (data) => {
+      if(waitLog){
+        logMsg = data;
+        logMsg.forEach((data) => {
+          let idData = data['id'].replace('/#', '');
+          if(idData== socket.id){
+            $('#inside_msg').append('<div class="msg me">'+data.msg+'</div>');
+            console.log('meu');
+          } else if(idData == 'online'){
+             $('#inside_msg').append('<div class="msg user-on">Usuário <span class="name-on">'+data.gamertag+'</span> acabou de entrar!</div>');
+          } else {
+            $('#inside_msg').append('<div id="'+data.id+'" class="msg"><span class="user-send">'+data.gamertag+':</span> '+data.msg+'</div>');
+          }
+        });
+      }
+      console.log(data);
   });
 
 
   $('.container > .content').on('click', '.room', function() {
       const id = $(this).attr('id');
       idRoom = id;
+      waitLog = true;
       $('nav').hide();
       $('#inside_msg').html('');
       $('#users-on').html('');
@@ -73,7 +116,7 @@ $(document).ready(function() {
         $('#save-gamertag').modal('show');
         join = true;
       } else {
-        joinRoom(idRoom, gamertag);
+        joinRoom(idRoom, gamertag, socket);
       }
   });
 
@@ -141,6 +184,7 @@ $(document).ready(function() {
         }
         $('section#chat-room').hide();
         $('nav').show();
+        socket.emit('leave room');
       }
    });
 
@@ -176,9 +220,13 @@ $(document).ready(function() {
     }
   }, 3000) ;
 
-  function joinRoom(_id, gamertag){
+  function joinRoom(_id, gamertag, socket){
     socket.emit('join room', {_id, gamertag});
-    $('#users-on').append('<div class="user-in-room">'+gamertag+'</div>');
+    $('#users-on').append('<div id="'+socket.id+'" class="user-in-room">'+gamertag+'</div>');
+  }
+
+  function registerLog(arr, msg){
+      arr.push(msg);
   }
 
 });

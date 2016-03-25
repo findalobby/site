@@ -4,13 +4,6 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-let numberOnline = 0;
-// const session = require('express-session');
-//
-// app.use(session({
-//   cookieName: 'session',
-//   secret: 'apir4985t943vujicoaç'
-// }));
 
 mongoose.connect('mongodb://localhost/findalobby');
 const Schema = mongoose.Schema;
@@ -81,11 +74,28 @@ const emitRooms = (emitter) => {
         socket.gamertag = data.gamertag;
         socket.join(idRoom);
         console.log(idRoom+': '+onlineRoom(idRoom, io));
-        socket.broadcast.to(idRoom).emit('new user', socket.gamertag);
+        socket.broadcast.to(idRoom).emit('new user', {gamertag:socket.gamertag, id:socket.id});
+
+        const hostId = hostRoom(socket.idRoom, io);
+        if(hostId != socket.id){
+          socket.broadcast.to(hostId).emit('get msg', socket.id);
+        }
+    });
+
+    socket.on('getting log', (data) => {
+        socket.broadcast.to(data.to).emit('recive log', data.log);
+    });
+
+    socket.on('leave room', () => socket.leave(socket.idRoom));
+
+    socket.on('im online', (data) =>   {
+      if(sameRoom(socket.idRoom, io, data, socket.id)){
+        socket.broadcast.to(data).emit('log users', {gamertag:socket.gamertag, id:socket.id});
+      }
     });
 
     socket.on('send msg', (data) => {
-      socket.broadcast.to(socket.idRoom).emit('new msg', {msg: data, gamertag: socket.gamertag});
+      socket.broadcast.to(socket.idRoom).emit('new msg', {msg: data, gamertag: socket.gamertag, id: socket.id});
     });
 
     socket.on('create room', (value) => {
@@ -101,6 +111,24 @@ function onlineRoom(idRoom, io){
     return room.length;
   }
     return 0;
+}
+
+function sameRoom(idRoom, io, id1, id2){
+  const findIds = [];
+  for(let i in io.sockets.adapter.rooms[idRoom].sockets){
+      if(i == id1 || i == id2){
+        findIds.push(i);
+      }
+      if(findIds.length == 2){
+        return true;
+        break;
+      }
+  }
+}
+
+function hostRoom(idRoom, io){
+  for(var i in io.sockets.adapter.rooms[idRoom].sockets){break;}
+  return i;
 }
 
 http.listen(3000, function(){
