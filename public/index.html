@@ -188,7 +188,7 @@
   </div>
 </section>
 
-<section id="chat-room">
+<!-- <section id="chat-room">
   <div class="container-fluid">
     <div class="content">
       <div id="toggle-people">
@@ -217,8 +217,43 @@
       </form>
   </div>
 </div>
-</section>
+</section> -->
 
+<section id="room-chat">
+  <div class="container-fluid">
+    <div class="content">
+      <div id="users-online">
+        <img src="imgs/one.png">
+        <span class="name-game">BO2 - <span class="modo-game">Zombies</span></span>
+        <div class="online">Paulo Roberto</div>
+        <div class="online">Paulo Roberto</div>
+        <div class="online">Paulo Roberto</div>
+      </div>
+      <div id="all-msgs">
+        <div id="inside-msgs">
+           <div class="msg"><span class="user">Paulo Roberto:</span> vão a merda todos vocês</div>
+           <div class="msg">batata</div>
+           <div class="msg me">Mate sua familia, coma merda</div>
+           <div class="msg"><span class="user">Paulo Roberto:</span> vão a merda todos vocês</div>
+           <div class="msg">batata</div>
+           <div class="msg me">Mate sua familia, coma merda</div>
+           <div class="msg"><span class="user">Paulo Roberto:</span> vão a merda todos vocês</div>
+           <div class="msg">batata</div>
+           <div class="msg me">Mate sua familia, coma merda</div>
+           <div class="msg"><span class="user">Paulo Roberto:</span> vão a merda todos vocês</div>
+           <div class="msg">batata</div>
+           <div class="msg me">Mate sua familia, coma merda</div>
+           <div class="msg"><span class="user">Paulo Roberto:</span> vão a merda todos vocês</div>
+           <div class="msg">batata</div>
+           <div class="msg me">Mate sua familia, coma merda</div>
+         </div>
+      </div>
+    </div>
+  </div>
+    <form method="POST" name="msg-chat" autocomplete="off">
+      <input type="text" class="form-control" value="" placeholder="Sua mensagem..." name="msg" id="text-msg">
+    </form>
+</section>
 <script type="text/javascript" src="js/vendors/jquery.js"></script>
 <script type="text/javascript" src="js/vendors/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/vendors/socket.js"></script>
