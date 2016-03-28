@@ -36,22 +36,18 @@ const emitRooms = (emitter) => {
     });
 
 
-    setInterval(() => {
-      room.find({}, (err, data) => {
-          const rooms = data.map(obj => {
-            obj['online_players'] = 19;
-            return obj;
-          });
-          io.emit('news rooms', rooms);
+
+    socket.on('get news rooms', (platform) => {
+      const query = {};
+      if(platform){
+         query.platform = platform;
+       }
+      room.find(query, (err, data) => {
+          socket.emit('news rooms', data);
       });
-    }, 1000);
-
-
-
-    socket.on('disconnect', function(){
-      leaveRoom(socket);
-      console.log('Online: ', Object.keys(io.sockets['connected']).length);
     });
+
+    socket.on('save gamertag', (gamertag) => socket.gamertag = gamertag);
 
     socket.on('search', (data) => {
       const searchName = {};
@@ -70,17 +66,7 @@ const emitRooms = (emitter) => {
     });
 
     socket.on('join room', (data) => {
-        const idRoom = data._id;
-        socket.idRoom = idRoom;
-        socket.gamertag = data.gamertag;
-        socket.join(idRoom);
-        console.log(idRoom+': '+onlineRoom(idRoom, io));
-        socket.broadcast.to(idRoom).emit('new user', {gamertag:socket.gamertag, id:socket.id});
-
-        const hostId = hostRoom(socket.idRoom, io);
-        if(hostId != socket.id){
-          socket.broadcast.to(hostId).emit('get msg', socket.id);
-        }
+        joinRoom(socket, data);
     });
 
     socket.on('getting log', (data) => {
@@ -103,11 +89,33 @@ const emitRooms = (emitter) => {
     });
 
     socket.on('create room', (value) => {
-        room.create(value, (err, data) => {
-          socket.emit('room response',data);
-        });
+      if(socket.gamertag){
+          room.create(value, (err, data) => {
+            joinRoom(socket, data._id);
+            socket.emit('room response',data);
+          });
+      }
+    });
+
+    socket.on('disconnect', function(){
+      leaveRoom(socket);
+      console.log('Online: ', Object.keys(io.sockets['connected']).length);
     });
 });
+
+function joinRoom(socket, _id){
+  if((socket.gamertag) && (!socket.idRoom)){
+    socket.idRoom = _id;
+    socket.join(socket.idRoom);
+    console.log(socket.idRoom+': '+onlineRoom(socket.idRoom, io));
+    socket.broadcast.to(socket.idRoom).emit('new user', {gamertag:socket.gamertag, id:socket.id});
+
+    const hostId = hostRoom(socket.idRoom, io);
+    if(hostId != socket.id){
+      socket.broadcast.to(hostId).emit('get msg', socket.id);
+    }
+  }
+}
 
 function onlineRoom(idRoom, io){
   const room = io.sockets.adapter.rooms[idRoom];

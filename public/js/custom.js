@@ -4,13 +4,58 @@ $(document).ready(function() {
 
   var socket = io();
   let lastData = false;
-  let selected = '';
+  let selected = false;
   let idRoom = '';
   let gamertag = '';
   let join = false;
   let logMsg = [];
   let inverter = 0;
   let  waitLog = true;
+  let chatRoomOpen = false;
+
+  const closeChatRoom = () => {
+    $('section#room-chat').fadeOut('fast');
+    $('nav').show();
+    socket.emit('leave room');
+    waitLog = true;
+    chatRoomOpen = false;
+  }
+
+  const openChatRoom = () => {
+    chatRoomOpen = true;
+    waitLog = true;
+    logMsg = [];
+    $('nav').hide();
+    $('#inside-msgs').html('');
+    $('#onlines').html('');
+    $('section#room-chat').fadeIn('fast');
+  }
+
+  const searchOpen = ()=>{
+    open = true;
+    $('section#search').show();
+    $('nav').hide();
+    changeScroll();
+  }
+
+  const searchClose = () => {
+    open = false;
+    $('section#search').hide();
+    $('section#chat-room').hide();
+    $('#inside_rooms').html('');
+    changeScroll();
+    if(!chatRoomOpen){
+      $('header, nav').show();
+    }
+  }
+
+  // $('section#menu-rooms, header').click(() => {
+  //   if(chatRoomOpen){
+  //     closeChatRoom();
+  //   }
+  // });
+
+  $('#close_room_chat').click(closeChatRoom);
 
   socket.on('news rooms', (data) => {
       if(!lastData){lastData = data;}
@@ -21,6 +66,8 @@ $(document).ready(function() {
         });
       }
   });
+
+  onLoaded();
 
   $('form[name="msg-chat"]').submit(() => {
     const msg = $('#text-msg').val();
@@ -34,6 +81,7 @@ $(document).ready(function() {
           gamertag,
           msg
     });
+    scrollBottom("all-msgs");
     return false
   });
 
@@ -51,7 +99,9 @@ $(document).ready(function() {
    $('form[name="save_gamertag"]').submit(() => {
      $('#save-gamertag').modal('hide');
      gamertag = $('#gamertag').val();
+     socket.emit('save gamertag', gamertag);
      if(join){
+       openChatRoom();
       joinRoom(idRoom, gamertag, socket);
      }
      return false;
@@ -62,6 +112,7 @@ $(document).ready(function() {
   socket.on('new msg', (data) => {
     $('div#inside-msgs').append('<div class="msg"><span class="user">'+data.gamertag+':</span> '+data.msg+'</div>');
     registerLog(logMsg, data);
+    scrollBottom("all-msgs");
   });
 
   socket.on('new user', (data) => {
@@ -78,7 +129,10 @@ $(document).ready(function() {
   socket.on('user leaves', (id) => $('#'+id.replace('/#', '')).fadeOut('fast'));
 
   socket.on('log users', (data) => {
-      $('div#onlines').append('<div id="'+setId(data)+'" class="online">'+data.gamertag+'</div>');
+      const idUser = setId(data);
+      if(!document.getElementById(idUser)){
+        $('div#onlines').append('<div id="'+idUser+'" class="online">'+data.gamertag+'</div>');
+      }
   });
 
   socket.on('get msg', (data) => {
@@ -101,42 +155,44 @@ $(document).ready(function() {
           }
         });
       }
-      console.log(data);
+      scrollBottom("all-msgs");
+      waitLog = false;
   });
 
 
   $('.container > .content').on('click', '.room', function() {
-      const id = $(this).attr('id');
-      const name = $(this).attr('name');
-      const game = $(this).attr('game');
-      idRoom = id;
-      waitLog = true;
-      $('nav').hide();
-      $('#inside-msgs').html('');
-      $('#onlines').html('');
-      $('span#name-span-game').html(game);
-      $('span.modo-game').html(name);
-      $('section#room-chat').fadeIn('fast');
-
+        const name = $(this).attr('name');
+        const game = $(this).attr('game');
+        const id = $(this).attr('id');
+        $('span#name-span-game').html(game);
+        $('span.modo-game').html(name);
+        idRoom = id;
       if(!gamertag){
         $('#save-gamertag').modal('show');
         join = true;
       } else {
+        openChatRoom();
         joinRoom(idRoom, gamertag, socket);
       }
   });
-
   socket.on('search response', (data) => {
         $('#search_rooms').html('');
         data.forEach((room) => {
-          $('#search_rooms').append('<div class="room" id="'+room._id+'" name="'+room.name+'" game="'+room.game+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">1/'+room.max_players+'</div></div>');
+          $('#search_rooms').append('<div class="room" id="'+room._id+'" name="'+room.name+'" game="'+room.game+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
         });
   });
 
   socket.on('room response', (data) => {
       if(typeof data === 'object')
       $('#close_room').click();
+      openChatRoom();
+      $('span#name-span-game').html(data.game);
+      $('span.modo-game').html(data.name);
+      $('div#onlines').append('<div id="'+socket.id+'" class="online">'+gamertag+'</div>');
+
   });
+
+  setInterval(() => socket.emit('get news rooms', selected), 5000);
 
 
   $('#input_search').keydown(function(){
@@ -157,27 +213,8 @@ $(document).ready(function() {
 
   let open = false;
 
-
-  const searchOpen = ()=>{
-    open = true;
-    $('section#search').show();
-    $('nav').hide();
-    changeScroll();
-  }
-
-  const searchClose = () => {
-    open = false;
-    $('section#search').hide();
-    $('section#chat-room').hide();
-    $('header, nav').show();
-    $('#inside_rooms').html('');
-    changeScroll();
-  }
-
-  console.log(socket);
-
   $('#toggle-people').click(function() {
-    $('#people-in-the-room').toggle('slide');
+    $('#users-online').toggle('slide');
   });
 
   $('a#search_link').click(searchOpen);
@@ -188,9 +225,7 @@ $(document).ready(function() {
         if(open){
           searchClose();
         }
-        $('section#room-chat').hide();
-        $('nav').show();
-        socket.emit('leave room');
+        closeChatRoom();
       }
    });
 
@@ -209,6 +244,7 @@ $(document).ready(function() {
     let path = $(this).attr('data');
     $('.platforms').html('<img src="imgs/'+path+'">');
     $('.dropdown').removeClass('open');
+    socket.emit('get news rooms', selected);
     return false;
   });
 
@@ -227,16 +263,30 @@ $(document).ready(function() {
   }, 3000) ;
 
   function joinRoom(_id, gamertag, socket){
-    socket.emit('join room', {_id, gamertag});
+    socket.emit('join room', _id);
     $('div#onlines').append('<div id="'+socket.id+'" class="online">'+gamertag+'</div>');
   }
 
   function registerLog(arr, msg){
+    if(arr.length <= 100){
       arr.push(msg);
+    } else {
+      arr = [];
+      ar.push(msg);
+    }
   }
 
   function setId(data){
     return data['id'].replace('/#', '');
+  }
+  function onLoaded(){
+    socket.emit('get news rooms', selected);
+    socket.emit('get news rooms', selected);
+  }
+
+  function scrollBottom(divId){
+    let objDiv = document.getElementById(divId);
+    objDiv.scrollTop = objDiv.scrollHeight;
   }
 
 });

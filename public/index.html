@@ -133,6 +133,28 @@
   </div>
 </div>
 
+<!-- Modal gamertag -->
+<div class="modal fade" id="save-gamertag" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" id="close_room" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Gamertag</h4>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="" name="save_gamertag">
+          <div class="form-group">
+              <input class="form-control" required type="text" name="gamertag" id="gamertag">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="submit" value="SALVAR" class="btn btn-primary btn_orange center-block">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <section id="menu-rooms">
   <div class="container">
   <div id="space" class="content">
@@ -145,28 +167,6 @@
         <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
       </ul>
     </div>
-    </div>
-
-    <!-- Modal gamertag -->
-    <div class="modal fade" id="save-gamertag" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" id="close_room" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Gamertag</h4>
-          </div>
-          <div class="modal-body">
-            <form method="POST" action="" name="save_gamertag">
-              <div class="form-group">
-                  <input class="form-control" required type="text" name="gamertag" id="gamertag">
-              </div>
-            </div>
-            <div class="modal-footer">
-              <input type="submit" value="SALVAR" class="btn btn-primary btn_orange center-block">
-            </div>
-          </form>
-        </div>
-      </div>
     </div>
 
     <div class="content" id="news_rooms">
@@ -195,7 +195,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
-    </div>
+      </div>
       <div id="people-in-the-room">
           <img src="imgs/one.png" alt="Xbox one" title="Xbox one">
           <h3>BO2<br><span class="name-room">ZOMBIES</span></h3>
@@ -220,12 +220,30 @@
 </section> -->
 
 <section id="room-chat">
+  <button type="button" id="close_room_chat" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">×</span>
+  </button>
   <div class="container-fluid">
     <div class="content">
       <div id="users-online">
         <img src="imgs/one.png">
         <span class="name-game"><span id="name-span-game">BO2</span> - <span class="modo-game">Zombies</span></span>
         <div id="onlines">
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
+          <div class="online">Paulo Roberto</div>
           <div class="online">Paulo Roberto</div>
           <div class="online">Paulo Roberto</div>
           <div class="online">Paulo Roberto</div>
@@ -256,6 +274,11 @@
     <form method="POST" name="msg-chat" autocomplete="off">
       <input type="text" class="form-control" value="" placeholder="Sua mensagem..." name="msg" id="text-msg">
     </form>
+    <div id="toggle-people">
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    </div>
 </section>
 <script type="text/javascript" src="js/vendors/jquery.js"></script>
 <script type="text/javascript" src="js/vendors/bootstrap.min.js"></script>
