@@ -17,7 +17,7 @@ $(document).ready(function() {
       if(data != lastData){
         $('#news_rooms').html('');
         data.forEach((room) => {
-            $('#news_rooms').append('<div class="room" id="'+room._id+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
+            $('#news_rooms').append('<div class="room" id="'+room._id+'" name="'+room.name+'" game="'+room.game+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
         });
       }
   });
@@ -26,7 +26,7 @@ $(document).ready(function() {
     const msg = $('#text-msg').val();
     if(msg && gamertag){
       socket.emit('send msg', msg);
-      $('#inside_msg').append('<div class="msg me">'+msg+'</div>');
+      $('div#inside-msgs').append('<div class="msg me">'+msg+'</div>');
       $('#text-msg').val('');
     }
     registerLog(logMsg,{
@@ -60,13 +60,13 @@ $(document).ready(function() {
 
 
   socket.on('new msg', (data) => {
-    $('#inside_msg').append('<div id="'+data.id+'" class="msg"><span class="user-send">'+data.gamertag+':</span> '+data.msg+'</div>');
+    $('div#inside-msgs').append('<div class="msg"><span class="user">'+data.gamertag+':</span> '+data.msg+'</div>');
     registerLog(logMsg, data);
   });
 
   socket.on('new user', (data) => {
-      $('#users-on').append('<div class="user-in-room" id="'+data.id+'">'+data.gamertag+'</div>');
-      $('#inside_msg').append('<div class="msg user-on">Usuário <span class="name-on">'+data.gamertag+'</span> acabou de entrar!</div>');
+      $('div#onlines').append('<div id="'+data.id+'" class="online">'+data.gamertag+'</div>');
+      $('div#inside-msgs').append('<div class="msg online">Usuário <span class="name-on">'+data.gamertag+'</span> acabou de entrar!</div>');
       socket.emit('im online', data.id);
       registerLog(logMsg, {
         id: '/#online',
@@ -76,7 +76,7 @@ $(document).ready(function() {
   });
 
   socket.on('log users', (data) => {
-      $('#users-on').append('<div class="user-in-room" id="'+data.id+'">'+data.gamertag+'</div>');
+      $('div#onlines').append('<div id="'+data.id+'" class="online">'+data.gamertag+'</div>');
   });
 
   socket.on('get msg', (data) => {
@@ -90,12 +90,12 @@ $(document).ready(function() {
         logMsg.forEach((data) => {
           let idData = data['id'].replace('/#', '');
           if(idData== socket.id){
-            $('#inside_msg').append('<div class="msg me">'+data.msg+'</div>');
+            $('div#inside-msgs').append('<div class="msg me">'+data.msg+'</div>');
             console.log('meu');
           } else if(idData == 'online'){
-             $('#inside_msg').append('<div class="msg user-on">Usuário <span class="name-on">'+data.gamertag+'</span> acabou de entrar!</div>');
+             $('div#inside-msgs').append('<div class="msg online">Usuário <span class="name-on">'+data.gamertag+'</span> acabou de entrar!</div>');
           } else {
-            $('#inside_msg').append('<div id="'+data.id+'" class="msg"><span class="user-send">'+data.gamertag+':</span> '+data.msg+'</div>');
+            $('div#inside-msgs').append('<div class="msg"><span class="user">'+data.gamertag+':</span> '+data.msg+'</div>');
           }
         });
       }
@@ -105,12 +105,16 @@ $(document).ready(function() {
 
   $('.container > .content').on('click', '.room', function() {
       const id = $(this).attr('id');
+      const name = $(this).attr('name');
+      const game = $(this).attr('game');
       idRoom = id;
       waitLog = true;
       $('nav').hide();
-      $('#inside_msg').html('');
-      $('#users-on').html('');
-      $('#chat-room').fadeIn('fast');
+      $('#inside-msgs').html('');
+      $('#onlines').html('');
+      $('span#name-span-game').html(game);
+      $('span.modo-game').html(name);
+      $('section#room-chat').fadeIn('fast');
 
       if(!gamertag){
         $('#save-gamertag').modal('show');
@@ -123,7 +127,7 @@ $(document).ready(function() {
   socket.on('search response', (data) => {
         $('#search_rooms').html('');
         data.forEach((room) => {
-          $('#search_rooms').append('<div class="room" id="'+room._id+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">1/'+room.max_players+'</div></div>');
+          $('#search_rooms').append('<div class="room" id="'+room._id+'" name="'+room.name+'" game="'+room.game+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">1/'+room.max_players+'</div></div>');
         });
   });
 
@@ -182,7 +186,7 @@ $(document).ready(function() {
         if(open){
           searchClose();
         }
-        $('section#chat-room').hide();
+        $('section#room-chat').hide();
         $('nav').show();
         socket.emit('leave room');
       }
@@ -222,7 +226,7 @@ $(document).ready(function() {
 
   function joinRoom(_id, gamertag, socket){
     socket.emit('join room', {_id, gamertag});
-    $('#users-on').append('<div id="'+socket.id+'" class="user-in-room">'+gamertag+'</div>');
+    $('div#onlines').append('<div id="'+socket.id+'" class="online">'+gamertag+'</div>');
   }
 
   function registerLog(arr, msg){

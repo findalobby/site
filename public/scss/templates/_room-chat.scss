@@ -12,6 +12,7 @@ section#room-chat{
   -webkit-box-shadow: 7px 0 100px -2px #000;
   box-shadow: 7px 0 100px -2px #000;
   border-radius: 5px;
+  display: none;
 
 
 
@@ -78,6 +79,7 @@ section#room-chat{
     @include make-xs-column(12);
     @include make-md-column(9.5);
     @include make-md-column-offset(2.5);
+    padding-top: 10px;
     height: 90%;
     //background-color: #000;
     position: absolute;
@@ -101,6 +103,14 @@ section#room-chat{
     .me{
       float: right !important;
       background-color: second_color() !important;
+    }
+    .online{
+      background-color: #fff !important;
+      color: second_color() !important;
+      span.name-on{
+        font-weight: bold;
+        color: color_main();
+      }
     }
     div.msg{
       font-family: $font_main;
