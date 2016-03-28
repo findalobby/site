@@ -49,6 +49,7 @@ const emitRooms = (emitter) => {
 
 
     socket.on('disconnect', function(){
+      leaveRoom(socket);
       console.log('Online: ', Object.keys(io.sockets['connected']).length);
     });
 
@@ -86,7 +87,10 @@ const emitRooms = (emitter) => {
         socket.broadcast.to(data.to).emit('recive log', data.log);
     });
 
-    socket.on('leave room', () => socket.leave(socket.idRoom));
+    socket.on('leave room', () => {
+      leaveRoom(socket);
+      socket.idRoom = '';
+    });
 
     socket.on('im online', (data) =>   {
       if(sameRoom(socket.idRoom, io, data, socket.id)){
@@ -129,6 +133,11 @@ function sameRoom(idRoom, io, id1, id2){
 function hostRoom(idRoom, io){
   for(var i in io.sockets.adapter.rooms[idRoom].sockets){break;}
   return i;
+}
+
+function leaveRoom(socket){
+  socket.leave(socket.idRoom);
+  socket.broadcast.to(socket.idRoom).emit('user leaves', socket.id);
 }
 
 http.listen(3000, function(){

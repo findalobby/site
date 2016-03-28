@@ -65,7 +65,8 @@ $(document).ready(function() {
   });
 
   socket.on('new user', (data) => {
-      $('div#onlines').append('<div id="'+data.id+'" class="online">'+data.gamertag+'</div>');
+      const idData = setId(data);
+      $('div#onlines').append('<div id="'+idData+'" class="online">'+data.gamertag+'</div>');
       $('div#inside-msgs').append('<div class="msg online">Usuário <span class="name-on">'+data.gamertag+'</span> acabou de entrar!</div>');
       socket.emit('im online', data.id);
       registerLog(logMsg, {
@@ -74,9 +75,10 @@ $(document).ready(function() {
         msg: 'online'
       });
   });
+  socket.on('user leaves', (id) => $('#'+id.replace('/#', '')).fadeOut('fast'));
 
   socket.on('log users', (data) => {
-      $('div#onlines').append('<div id="'+data.id+'" class="online">'+data.gamertag+'</div>');
+      $('div#onlines').append('<div id="'+setId(data)+'" class="online">'+data.gamertag+'</div>');
   });
 
   socket.on('get msg', (data) => {
@@ -88,7 +90,7 @@ $(document).ready(function() {
       if(waitLog){
         logMsg = data;
         logMsg.forEach((data) => {
-          let idData = data['id'].replace('/#', '');
+          const idData = setId(data);
           if(idData== socket.id){
             $('div#inside-msgs').append('<div class="msg me">'+data.msg+'</div>');
             console.log('meu');
@@ -231,6 +233,10 @@ $(document).ready(function() {
 
   function registerLog(arr, msg){
       arr.push(msg);
+  }
+
+  function setId(data){
+    return data['id'].replace('/#', '');
   }
 
 });
