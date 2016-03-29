@@ -37,11 +37,11 @@ const emitRooms = (emitter) => {
 
 
 
-    socket.on('get news rooms', (platform) => {
+    socket.on('get news rooms', (select) => {
       const query = {};
-      if(platform){
-         query.platform = platform;
-       }
+      if(select){
+        query.platform = select;
+      }
       room.find(query, (err, data) => {
           socket.emit('news rooms', data);
       });
@@ -73,10 +73,7 @@ const emitRooms = (emitter) => {
         socket.broadcast.to(data.to).emit('recive log', data.log);
     });
 
-    socket.on('leave room', () => {
-      leaveRoom(socket);
-      socket.idRoom = '';
-    });
+    socket.on('leave room', () => leaveRoom(socket));
 
     socket.on('im online', (data) =>   {
       if(sameRoom(socket.idRoom, io, data, socket.id)){
@@ -89,12 +86,10 @@ const emitRooms = (emitter) => {
     });
 
     socket.on('create room', (value) => {
-      if(socket.gamertag){
-          room.create(value, (err, data) => {
-            joinRoom(socket, data._id);
-            socket.emit('room response',data);
-          });
-      }
+        room.create(value, (err, data) => {
+          joinRoom(socket, data._id);
+          socket.emit('room response',data);
+        });
     });
 
     socket.on('disconnect', function(){
@@ -103,17 +98,24 @@ const emitRooms = (emitter) => {
     });
 });
 
-function joinRoom(socket, _id){
-  if((socket.gamertag) && (!socket.idRoom)){
-    socket.idRoom = _id;
-    socket.join(socket.idRoom);
-    console.log(socket.idRoom+': '+onlineRoom(socket.idRoom, io));
-    socket.broadcast.to(socket.idRoom).emit('new user', {gamertag:socket.gamertag, id:socket.id});
+function joinRoom(socket, idRoom){
+  if((socket.gamertag) && (!socket.idRoom))
+    socket.idRoom = idRoom;
+    socket.join(idRoom);
+    console.log(idRoom+': '+onlineRoom(idRoom, io));
+    socket.broadcast.to(idRoom).emit('new user', {gamertag:socket.gamertag, id:socket.id});
 
     const hostId = hostRoom(socket.idRoom, io);
     if(hostId != socket.id){
       socket.broadcast.to(hostId).emit('get msg', socket.id);
     }
+}
+
+function leaveRoom(socket){
+  if(socket.idRoom){
+    socket.broadcast.to(socket.idRoom).emit('user leaves', socket.id);
+    socket.leave(socket.idRoom);
+    delete socket.idRoom;
   }
 }
 
@@ -141,11 +143,6 @@ function sameRoom(idRoom, io, id1, id2){
 function hostRoom(idRoom, io){
   for(var i in io.sockets.adapter.rooms[idRoom].sockets){break;}
   return i;
-}
-
-function leaveRoom(socket){
-  socket.leave(socket.idRoom);
-  socket.broadcast.to(socket.idRoom).emit('user leaves', socket.id);
 }
 
 http.listen(3000, function(){
