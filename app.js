@@ -37,12 +37,15 @@ const emitRooms = (emitter) => {
 
 
 
-    socket.on('get news rooms', (select) => {
+    socket.on('get news rooms', (data) => {
       const query = {};
-      if(select){
-        query.platform = select;
+      if(data.selected){
+        query.platform = data.selected;
       }
-      room.find(query, (err, data) => {
+      if(data.limit > 100){
+        data.limit = 100;
+      }
+      room.find(query).sort({_id:'desc'}).limit(data.limit).exec((err, data) => {
           socket.emit('news rooms', data);
       });
     });
@@ -55,15 +58,20 @@ const emitRooms = (emitter) => {
 
       searchName.name = new RegExp(data.input, "i");
       searchGame.game = new RegExp(data.input, "i");
-      if(data.platform) {
-        searchName.platform = data.platform;
-        searchGame.platform = data.platform;
+
+      if(data.selected) {
+        searchName.platform = data.selected;
+        searchGame.platform = data.selected;
       };
 
-      room.find({$or: [ searchName, searchGame ]}, (err, data) => {
-          socket.emit('search response', data);
+      if(data.limit > 100){
+        data.limit = 100;
+      }
+
+      room.find({$or: [ searchName, searchGame ]}).limit(data.limit).exec((err, data) => {
+            socket.emit('search response', data);
       });
-    });
+  });
 
     socket.on('join room', (data) => {
         joinRoom(socket, data);
@@ -73,7 +81,7 @@ const emitRooms = (emitter) => {
         socket.broadcast.to(data.to).emit('recive log', data.log);
     });
 
-    socket.on('leave room', () => leaveRoom(socket));
+    socket.on('leave room', () => leaveRoom(socket,1));
 
     socket.on('im online', (data) =>   {
       if(sameRoom(socket.idRoom, io, data, socket.id)){
@@ -86,34 +94,42 @@ const emitRooms = (emitter) => {
     });
 
     socket.on('create room', (value) => {
+      if(socket.gamertag){
         room.create(value, (err, data) => {
           joinRoom(socket, data._id);
           socket.emit('room response',data);
         });
+      }
     });
 
     socket.on('disconnect', function(){
-      leaveRoom(socket);
+      leaveRoom(socket, 0);
       console.log('Online: ', Object.keys(io.sockets['connected']).length);
     });
 });
 
 function joinRoom(socket, idRoom){
-  if((socket.gamertag) && (!socket.idRoom))
-    socket.idRoom = idRoom;
-    socket.join(idRoom);
-    console.log(idRoom+': '+onlineRoom(idRoom, io));
-    socket.broadcast.to(idRoom).emit('new user', {gamertag:socket.gamertag, id:socket.id});
+  if((socket.gamertag) && (!socket.idRoom)){
+      socket.idRoom = idRoom;
+      socket.join(idRoom);
+      console.log(idRoom+': '+onlineRoom(idRoom, io));
+      socket.broadcast.to(idRoom).emit('new user', {gamertag:socket.gamertag, id:socket.id});
 
-    const hostId = hostRoom(socket.idRoom, io);
-    if(hostId != socket.id){
-      socket.broadcast.to(hostId).emit('get msg', socket.id);
-    }
+      const hostId = hostRoom(socket.idRoom, io);
+      if(hostId != socket.id){
+        socket.broadcast.to(hostId).emit('get msg', socket.id);
+      }
+  }
 }
 
-function leaveRoom(socket){
+function leaveRoom(socket, limit){
   if(socket.idRoom){
-    socket.broadcast.to(socket.idRoom).emit('user leaves', socket.id);
+    if(onlineRoom(socket.idRoom, io) == limit){
+        console.log(onlineRoom(socket.idRoom, io));
+        room.remove({_id:socket.idRoom}, (err) => '');
+    }else{
+      socket.broadcast.to(socket.idRoom).emit('user leaves', socket.id);
+    }
     socket.leave(socket.idRoom);
     delete socket.idRoom;
   }

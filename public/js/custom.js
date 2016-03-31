@@ -3,15 +3,15 @@ $(document).ready(function() {
   'use strict';
 
   var socket = io();
-  let lastData = false;
   let selected = false;
   let idRoom = '';
   let gamertag = '';
   let join = false;
   let logMsg = [];
-  let inverter = 0;
-  let  waitLog = true;
+  let waitLog = true;
   let chatRoomOpen = false;
+  let limitRooms = 5;
+  let limitSearch = 5;
 
   const closeChatRoom = () => {
     $('section#room-chat').fadeOut('fast');
@@ -33,8 +33,10 @@ $(document).ready(function() {
 
   const searchOpen = ()=>{
     open = true;
+    $('#input_search').val('');
     $('section#search').show();
     $('nav').hide();
+    socket.emit('search', {input: '', selected, limit:limitSearch});
     changeScroll();
   }
 
@@ -55,19 +57,55 @@ $(document).ready(function() {
   //   }
   // });
 
+  $('#more-rooms').click(() => {
+    const rooms = $('#menu-rooms');
+    if(limitRooms < 100){
+      limitRooms += 5;
+    }
+    $("html, body").animate({scrollTop:rooms.offset().top + rooms.height()}, 1000);
+    socket.emit('get news rooms', {selected, limit: limitRooms});
+  });
+
+  $('#more-search').click(() => {
+    const search = $('#search');
+    const valueInput = $('#input_search').val();
+    if(limitSearch < 100){
+      limitSearch += 5;
+    }
+    socket.emit('search', {input: valueInput, selected, limit: limitSearch});
+    search.animate({scrollTop:limitSearch*40}, 1000);
+  });
+
+  $('#ul-rooms > li').click(function (){
+    dropdownUpdate(this);
+    limitRooms = 5;
+    limitSearch = 5;
+    socket.emit('get news rooms', {selected, limit: limitRooms});
+    return false;
+  });
+  $('#ul-search > li').click(function() {
+    dropdownUpdate(this);
+    const valueInput = $('#input_search').val();
+    limitRooms = 5;
+    limitSearch = 5;
+    socket.emit('get news rooms', {selected, limit: limitRooms});
+    socket.emit('search', {input: valueInput, selected, limit: limitSearch});
+    return false;
+  });
   $('#close_room_chat').click(closeChatRoom);
 
   socket.on('news rooms', (data) => {
-      if(!lastData){lastData = data;}
-      if(data != lastData){
-        $('#news_rooms').html('');
+        data.sort((a,b) => b.online_players - a.online_players);
+        $('#inside_news').html('');
         data.forEach((room) => {
-            $('#news_rooms').append('<div class="room" id="'+room._id+'" name="'+room.name+'" game="'+room.game+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
+            $('#inside_news').append('<div class="room" id="'+room._id+'" name="'+room.name+'" game="'+room.game+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
         });
-      }
+        if(data.length < limitRooms || data.length >= 100){
+          $('#more-rooms').hide();
+        } else{
+          $('#more-rooms').show();
+        }
   });
-
-  onLoaded();
 
   $('form[name="msg-chat"]').submit(() => {
     const msg = $('#text-msg').val();
@@ -82,18 +120,22 @@ $(document).ready(function() {
           msg
     });
     scrollBottom("all-msgs");
-    return false
+    return false;
   });
 
 
    $('form[name="create_room"]').submit(function() {
-      const data = {};
-      data.name = $('#name').val();
-      data.max_players = $('#limit').val();
-      data.game = $('#game').val();
-      data.platform = $('select#plataform option:selected').val();
-      socket.emit('create room', data);
-      return false;
+     if(gamertag){
+        const data = {};
+        data.name = $('#name').val();
+        data.max_players = $('#limit').val();
+        data.game = $('#game').val();
+        data.platform = $('select#plataform option:selected').val();
+        socket.emit('create room', data);
+      } else{
+        $('#save-gamertag').modal('show');
+      }
+       return false;
    });
 
    $('form[name="save_gamertag"]').submit(() => {
@@ -176,28 +218,35 @@ $(document).ready(function() {
       }
   });
   socket.on('search response', (data) => {
+        data.sort((a,b) => b.online_players - a.online_players);
         $('#search_rooms').html('');
         data.forEach((room) => {
           $('#search_rooms').append('<div class="room" id="'+room._id+'" name="'+room.name+'" game="'+room.game+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
         });
+        if(data.length < limitSearch || data.length >= 100){
+          $('#more-search').hide();
+        } else{
+          $('#more-search').show();
+        }
   });
 
   socket.on('room response', (data) => {
-      if(typeof data === 'object')
-      $('#close_room').click();
-      openChatRoom();
-      $('span#name-span-game').html(data.game);
-      $('span.modo-game').html(data.name);
-      $('div#onlines').append('<div id="'+socket.id+'" class="online">'+gamertag+'</div>');
+      if(typeof data === 'object'){
+        $('#close_room').click();
+        openChatRoom();
+        $('span#name-span-game').html(data.game);
+        $('span.modo-game').html(data.name);
+        $('div#onlines').append('<div id="'+socket.id+'" class="online">'+gamertag+'</div>');
+    }
 
   });
 
-  setInterval(() => socket.emit('get news rooms', selected), 5000);
+  setInterval(() => socket.emit('get news rooms', {selected, limit: limitRooms}), 5000);
 
 
   $('#input_search').keydown(function(){
       const valueInput = $(this).val();
-      socket.emit('search', {input: valueInput, platform: selected});
+      socket.emit('search', {input: valueInput, selected, limit: limitSearch});
   });
 
 
@@ -233,19 +282,16 @@ $(document).ready(function() {
      $('#criar-sala').modal('show');
      if(!gamertag){
           $('#save-gamertag').modal('show');
+          join = false;
      }
    });
 
   $('#criar-sala').on('show.bs.modal', e => changeScroll());
   $('#criar-sala').on('hidden.bs.modal', e => changeScroll());
 
-  $('.dropdown-menu > li').click(function() {
-    selected = $(this).attr('name');
-    let path = $(this).attr('data');
-    $('.platforms').html('<img src="imgs/'+path+'">');
-    $('.dropdown').removeClass('open');
-    socket.emit('get news rooms', selected);
-    return false;
+  socket.on('disconnect', () => {
+    alert('Desconectado, atualizando página.');
+    window.location.reload(true);
   });
 
   setInterval(() =>{
@@ -280,13 +326,22 @@ $(document).ready(function() {
     return data['id'].replace('/#', '');
   }
   function onLoaded(){
-    socket.emit('get news rooms', selected);
-    socket.emit('get news rooms', selected);
+    socket.emit('get news rooms', {selected, limit: 5});
+    socket.emit('get news rooms', {selected, limit: 5});
   }
+  onLoaded();
 
   function scrollBottom(divId){
     let objDiv = document.getElementById(divId);
     objDiv.scrollTop = objDiv.scrollHeight;
+  }
+
+  function dropdownUpdate(drop){
+    selected = $(drop).attr('name');
+    let path = $(drop).attr('data');
+    $('.platforms').html('<img src="imgs/'+path+'">');
+    $('.dropdown').removeClass('open');
+    return false;
   }
 
 });
