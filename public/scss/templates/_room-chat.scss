@@ -33,11 +33,13 @@ section#room-chat{
       text-shadow: 0 1px 0 #fff;
       transition: 1s;
       filter: alpha(opacity=20);
-      &:hover{
+      outline: none;
+      &:hover, &:focus{
         opacity: 1;
         color: color_main();
         transition: 1s;
         text-shadow: 0 1px 0 #000;
+        outline: none;
       }
   }
 

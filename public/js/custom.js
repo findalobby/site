@@ -22,7 +22,6 @@ $(document).ready(function() {
   }
 
   const openChatRoom = () => {
-    chatRoomOpen = true;
     waitLog = true;
     logMsg = [];
     $('nav').hide();
@@ -57,6 +56,33 @@ $(document).ready(function() {
   //   }
   // });
 
+    $(window).scroll(function(){
+    	const scrollTopAtual = $(this).scrollTop();
+    	const nav = $('nav');
+
+    	if (scrollTopAtual >= 200) {
+    		nav.addClass('bg-scroll');
+    	}
+    	else {
+    		nav.removeClass('bg-scroll');
+    //    $('li.on-page').removeClass('on-page');
+    	}
+  });
+
+  $('ul.nav > li > a').click(function() {
+    const li = $(this).parent();
+    const position = $(this.hash).offset();
+    const linkHref = $(this).attr('href');
+
+    $('li.on-page').removeClass('on-page');
+
+    if(linkHref != '#' || !linkHref){
+      li.addClass('on-page');
+      $("html, body").animate({scrollTop:position.top}, 1000);
+      return false;
+    }
+  });
+
   $('#more-rooms').click(() => {
     const rooms = $('#menu-rooms');
     if(limitRooms < 100){
@@ -73,7 +99,7 @@ $(document).ready(function() {
       limitSearch += 5;
     }
     socket.emit('search', {input: valueInput, selected, limit: limitSearch});
-    search.animate({scrollTop:limitSearch*40}, 1000);
+  //  search.animate({scrollTop:limitSearch*40}, 1000);
   });
 
   $('#ul-rooms > li').click(function (){
@@ -98,7 +124,7 @@ $(document).ready(function() {
         data.sort((a,b) => b.online_players - a.online_players);
         $('#inside_news').html('');
         data.forEach((room) => {
-            $('#inside_news').append('<div class="room" id="'+room._id+'" name="'+room.name+'" game="'+room.game+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
+            $('#inside_news').append('<div class="room" id="'+room._id+'" name="'+strip_tags(room.name)+'" game="'+strip_tags(room.game)+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+strip_tags(room.game)+'</div><div class="room-mode">'+strip_tags(room.name)+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
         });
         if(data.length < limitRooms || data.length >= 100){
           $('#more-rooms').hide();
@@ -108,7 +134,7 @@ $(document).ready(function() {
   });
 
   $('form[name="msg-chat"]').submit(() => {
-    const msg = $('#text-msg').val();
+    let msg = strip_tags($('#text-msg').val());
     if(msg && gamertag){
       socket.emit('send msg', msg);
       $('div#inside-msgs').append('<div class="msg me">'+msg+'</div>');
@@ -127,10 +153,10 @@ $(document).ready(function() {
    $('form[name="create_room"]').submit(function() {
      if(gamertag){
         const data = {};
-        data.name = $('#name').val();
-        data.max_players = $('#limit').val();
-        data.game = $('#game').val();
-        data.platform = $('select#plataform option:selected').val();
+        data.name = strip_tags($('#name').val());
+        data.max_players = strip_tags($('#limit').val());
+        data.game = strip_tags($('#game').val());
+        data.platform = strip_tags($('select#plataform option:selected').val());
         socket.emit('create room', data);
       } else{
         $('#save-gamertag').modal('show');
@@ -140,7 +166,7 @@ $(document).ready(function() {
 
    $('form[name="save_gamertag"]').submit(() => {
      $('#save-gamertag').modal('hide');
-     gamertag = $('#gamertag').val();
+     gamertag = strip_tags($('#gamertag').val());
      socket.emit('save gamertag', gamertag);
      if(join){
        openChatRoom();
@@ -152,15 +178,15 @@ $(document).ready(function() {
 
 
   socket.on('new msg', (data) => {
-    $('div#inside-msgs').append('<div class="msg"><span class="user">'+data.gamertag+':</span> '+data.msg+'</div>');
+    $('div#inside-msgs').append('<div class="msg"><span class="user">'+strip_tags(data.gamertag)+':</span> '+strip_tags(data.msg)+'</div>');
     registerLog(logMsg, data);
     scrollBottom("all-msgs");
   });
 
   socket.on('new user', (data) => {
       const idData = setId(data);
-      $('div#onlines').append('<div id="'+idData+'" class="online">'+data.gamertag+'</div>');
-      $('div#inside-msgs').append('<div class="msg online">Usuário <span class="name-on">'+data.gamertag+'</span> acabou de entrar!</div>');
+      $('div#onlines').append('<div id="'+idData+'" class="online">'+strip_tags(data.gamertag)+'</div>');
+      $('div#inside-msgs').append('<div class="msg online">Usuário <span class="name-on">'+strip_tags(data.gamertag)+'</span> acabou de entrar!</div>');
       socket.emit('im online', data.id);
       registerLog(logMsg, {
         id: '/#online',
@@ -173,7 +199,7 @@ $(document).ready(function() {
   socket.on('log users', (data) => {
       const idUser = setId(data);
       if(!document.getElementById(idUser)){
-        $('div#onlines').append('<div id="'+idUser+'" class="online">'+data.gamertag+'</div>');
+        $('div#onlines').append('<div id="'+idUser+'" class="online">'+strip_tags(data.gamertag)+'</div>');
       }
   });
 
@@ -188,12 +214,12 @@ $(document).ready(function() {
         logMsg.forEach((data) => {
           const idData = setId(data);
           if(idData== socket.id){
-            $('div#inside-msgs').append('<div class="msg me">'+data.msg+'</div>');
+            $('div#inside-msgs').append('<div class="msg me">'+strip_tags(data.msg)+'</div>');
             console.log('meu');
           } else if(idData == 'online'){
-             $('div#inside-msgs').append('<div class="msg online">Usuário <span class="name-on">'+data.gamertag+'</span> acabou de entrar!</div>');
+             $('div#inside-msgs').append('<div class="msg online">Usuário <span class="name-on">'+strip_tags(data.gamertag)+'</span> acabou de entrar!</div>');
           } else {
-            $('div#inside-msgs').append('<div class="msg"><span class="user">'+data.gamertag+':</span> '+data.msg+'</div>');
+            $('div#inside-msgs').append('<div class="msg"><span class="user">'+strip_tags(data.gamertag)+':</span> '+strip_tags(data.msg)+'</div>');
           }
         });
       }
@@ -206,22 +232,24 @@ $(document).ready(function() {
         const name = $(this).attr('name');
         const game = $(this).attr('game');
         const id = $(this).attr('id');
-        $('span#name-span-game').html(game);
-        $('span.modo-game').html(name);
+        $('span#name-span-game').html(strip_tags(game));
+        $('span.modo-game').html(strip_tags(name));
         idRoom = id;
       if(!gamertag){
         $('#save-gamertag').modal('show');
         join = true;
       } else {
-        openChatRoom();
-        joinRoom(idRoom, gamertag, socket);
+        if(!chatRoomOpen){
+          openChatRoom();
+          joinRoom(idRoom, gamertag, socket);
+        }
       }
   });
   socket.on('search response', (data) => {
         data.sort((a,b) => b.online_players - a.online_players);
         $('#search_rooms').html('');
         data.forEach((room) => {
-          $('#search_rooms').append('<div class="room" id="'+room._id+'" name="'+room.name+'" game="'+room.game+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+room.game+'</div><div class="room-mode">'+room.name+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
+          $('#search_rooms').append('<div class="room" id="'+room._id+'" name="'+strip_tags(room.name)+'" game="'+strip_tags(room.game)+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+strip_tags(room.game)+'</div><div class="room-mode">'+strip_tags(room.name)+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
         });
         if(data.length < limitSearch || data.length >= 100){
           $('#more-search').hide();
@@ -234,9 +262,9 @@ $(document).ready(function() {
       if(typeof data === 'object'){
         $('#close_room').click();
         openChatRoom();
-        $('span#name-span-game').html(data.game);
-        $('span.modo-game').html(data.name);
-        $('div#onlines').append('<div id="'+socket.id+'" class="online">'+gamertag+'</div>');
+        $('span#name-span-game').html(strip_tags(data.game));
+        $('span.modo-game').html(strip_tags(data.name));
+        $('div#onlines').append('<div id="'+socket.id+'" class="online">'+strip_tags(gamertag)+'</div>');
     }
 
   });
@@ -310,7 +338,7 @@ $(document).ready(function() {
 
   function joinRoom(_id, gamertag, socket){
     socket.emit('join room', _id);
-    $('div#onlines').append('<div id="'+socket.id+'" class="online">'+gamertag+'</div>');
+    $('div#onlines').append('<div id="'+socket.id+'" class="online">'+strip_tags(gamertag)+'</div>');
   }
 
   function registerLog(arr, msg){
@@ -342,6 +370,19 @@ $(document).ready(function() {
     $('.platforms').html('<img src="imgs/'+path+'">');
     $('.dropdown').removeClass('open');
     return false;
+  }
+
+  function strip_tags(input, allowed) {
+    allowed = (((allowed || '') + '')
+      .toLowerCase()
+      .match(/<[a-z][a-z0-9]*>/g) || [])
+      .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+    var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+      commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+    return input.replace(commentsAndPhpTags, '')
+      .replace(tags, function($0, $1) {
+        return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+      });
   }
 
 });

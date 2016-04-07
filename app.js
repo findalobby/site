@@ -90,11 +90,13 @@ const emitRooms = (emitter) => {
     });
 
     socket.on('send msg', (data) => {
-      socket.broadcast.to(socket.idRoom).emit('new msg', {msg: data, gamertag: socket.gamertag, id: socket.id});
+      if(socket.idRoom){
+        socket.broadcast.to(socket.idRoom).emit('new msg', {msg: data, gamertag: socket.gamertag, id: socket.id});
+      }
     });
 
     socket.on('create room', (value) => {
-      if(socket.gamertag){
+      if((socket.gamertag) && !(socket.idRoom)){
         room.create(value, (err, data) => {
           joinRoom(socket, data._id);
           socket.emit('room response',data);
@@ -105,6 +107,7 @@ const emitRooms = (emitter) => {
     socket.on('disconnect', function(){
       leaveRoom(socket, 0);
       console.log('Online: ', Object.keys(io.sockets['connected']).length);
+    //  console.log(io.sockets.adapter.rooms);
     });
 });
 
