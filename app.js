@@ -15,7 +15,7 @@ const _schema = {
     platform: {type: String}
 }
 
-const schemaRoom = new Schema(_schema);
+const schemaRoom = new Schema(_schema, {  toObject: { virtuals: true},  toJSON: {virtuals: true } });
 const room = mongoose.model('rooms', schemaRoom);
 
 app.use(express.static('public'));
@@ -24,23 +24,30 @@ const emitRooms = (emitter) => {
   room.find({}, (err, data) => {
       emitter.emit('news rooms', data);
     });
+
   }
 
   io.on('connection', (socket) => {
-    console.log('a user connected');
+    console.log('Online: ', Object.keys(io.sockets['connected']).length);
 
-
-    setInterval(() => {
-      room.find({}, (err, data) => {
-          io.emit('news rooms', data);
-      });
-    }, 1000);
-
-
-
-    socket.on('disconnect', function(){
-      console.log('user disconnected');
+    schemaRoom.virtual('online_players').get(function(){
+            const idRoom = this._id;
+            return onlineRoom(idRoom, io);
     });
+
+
+
+    socket.on('get news rooms', (platform) => {
+      const query = {};
+      if(platform){
+         query.platform = platform;
+       }
+      room.find(query, (err, data) => {
+          socket.emit('news rooms', data);
+      });
+    });
+
+    socket.on('save gamertag', (gamertag) => socket.gamertag = gamertag);
 
     socket.on('search', (data) => {
       const searchName = {};
@@ -58,12 +65,88 @@ const emitRooms = (emitter) => {
       });
     });
 
+    socket.on('join room', (data) => {
+        joinRoom(socket, data);
+    });
+
+    socket.on('getting log', (data) => {
+        socket.broadcast.to(data.to).emit('recive log', data.log);
+    });
+
+    socket.on('leave room', () => {
+      leaveRoom(socket);
+      socket.idRoom = '';
+    });
+
+    socket.on('im online', (data) =>   {
+      if(sameRoom(socket.idRoom, io, data, socket.id)){
+        socket.broadcast.to(data).emit('log users', {gamertag:socket.gamertag, id:socket.id});
+      }
+    });
+
+    socket.on('send msg', (data) => {
+      socket.broadcast.to(socket.idRoom).emit('new msg', {msg: data, gamertag: socket.gamertag, id: socket.id});
+    });
+
     socket.on('create room', (value) => {
-        room.create(value, (err, data) => {
-          socket.emit('room response',data);
-        });
+      if(socket.gamertag){
+          room.create(value, (err, data) => {
+            joinRoom(socket, data._id);
+            socket.emit('room response',data);
+          });
+      }
+    });
+
+    socket.on('disconnect', function(){
+      leaveRoom(socket);
+      console.log('Online: ', Object.keys(io.sockets['connected']).length);
     });
 });
+
+function joinRoom(socket, _id){
+  if((socket.gamertag) && (!socket.idRoom)){
+    socket.idRoom = _id;
+    socket.join(socket.idRoom);
+    console.log(socket.idRoom+': '+onlineRoom(socket.idRoom, io));
+    socket.broadcast.to(socket.idRoom).emit('new user', {gamertag:socket.gamertag, id:socket.id});
+
+    const hostId = hostRoom(socket.idRoom, io);
+    if(hostId != socket.id){
+      socket.broadcast.to(hostId).emit('get msg', socket.id);
+    }
+  }
+}
+
+function onlineRoom(idRoom, io){
+  const room = io.sockets.adapter.rooms[idRoom];
+  if(room){
+    return room.length;
+  }
+    return 0;
+}
+
+function sameRoom(idRoom, io, id1, id2){
+  const findIds = [];
+  for(let i in io.sockets.adapter.rooms[idRoom].sockets){
+      if(i == id1 || i == id2){
+        findIds.push(i);
+      }
+      if(findIds.length == 2){
+        return true;
+        break;
+      }
+  }
+}
+
+function hostRoom(idRoom, io){
+  for(var i in io.sockets.adapter.rooms[idRoom].sockets){break;}
+  return i;
+}
+
+function leaveRoom(socket){
+  socket.leave(socket.idRoom);
+  socket.broadcast.to(socket.idRoom).emit('user leaves', socket.id);
+}
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
