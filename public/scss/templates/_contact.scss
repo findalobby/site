@@ -1,0 +1,101 @@
+#contact {
+	background-color: #f3f3f3;
+	padding: 50px;
+	text-align: center;
+
+	#text-contact{
+      text-transform: uppercase;
+      font-size: 40px;
+      font-family: $font_main;
+      color: second_color();
+    }
+
+    #social-media {
+    	@include make-md-column(12);
+
+    	margin-top: 50px;
+    	background-clip: content-box;
+
+    	a:hover {
+    		text-decoration: none;
+    	}
+
+
+    	> #facebook {
+
+    		background-color: #3a5795;
+    		border:solid 5px #3a5795;
+    		transition: all 0.5s;
+
+
+    		&:hover {
+    			border:solid 5px second_color(0.4);
+    			transition: all 0.5s;
+    		}
+		}
+
+		> #twitter {
+
+    		background-color: #55acee;
+    		border:solid 5px #55acee;
+    		transition: all 0.5s;
+
+
+    		&:hover {
+    			border:solid 5px second_color(0.3);
+    			transition: all 0.5s;
+    		}
+		}
+
+		> #googleplus {
+
+    		background-color: #dd4b39;
+    		border:solid 5px #dd4b39;
+    		transition: all 0.5s;
+
+
+    		&:hover {
+    			border:solid 5px second_color(0.4);
+    			transition: all 0.5s;
+    		}
+		}
+
+    	.social-media-button {
+    		@include make-xs-column(12);
+    		@include make-sm-column(9);
+    		@include make-md-column(3);
+
+    		@include make-sm-column-offset(1.5);
+    		@include make-md-column-offset(0.75);
+
+    		padding: 5px;
+    		text-transform: uppercase;
+    		font-size: 20px;
+    		cursor: pointer;
+    		border-radius: 2px;
+    		margin-top: 10px;
+			word-wrap: break-word;
+
+    		.social-media-text{
+    			color: $font_color_main;
+    			margin-top: 6px;
+    			display: block;
+
+
+    			&:hover {
+    				text-decoration: none;
+    			}
+    		}
+
+
+    		.social-media-logo {
+    			width: 40px;
+    			float: left;
+    			
+
+    		}
+    		
+    	}
+
+    }
+}
