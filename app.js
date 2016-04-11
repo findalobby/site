@@ -66,8 +66,8 @@ const emitRooms = (emitter) => {
       if(data.selected){
         query.platform = data.selected;
       }
-      if(data.limit > 100){
-        data.limit = 100;
+      if(data.limit > 300){
+        data.limit = 300;
       }
       room.find(query).sort({_id:'desc'}).limit(data.limit).exec((err, data) => {
           socket.emit('news rooms', data);
@@ -88,8 +88,8 @@ const emitRooms = (emitter) => {
         searchGame.platform = data.selected;
       };
 
-      if(data.limit > 100){
-        data.limit = 100;
+      if(data.limit > 300){
+        data.limit = 300;
       }
 
       room.find({$or: [ searchName, searchGame ]}).limit(data.limit).exec((err, data) => {
