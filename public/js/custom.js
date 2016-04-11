@@ -2,7 +2,29 @@ $(document).ready(function() {
 
   'use strict';
 
-  var socket = io();
+  const socket = io();
+  const imagesPlatform = {
+    'XBOX ONE': 'one.png',
+    'XBOX 360': '360.png',
+    'PLAYSTATION 4': 'ps4.png',
+    'PLAYSTATION 3': 'ps4.png',
+    'IOS': 'ios.png',
+    'ANDROID': 'android.png',
+    'PC': 'pc.png'
+  };
+  const validateName = (value) => {
+    if(value.length >=2 && value.length <=20){
+      return true;
+    }
+    return false;
+  }
+  const isInteger = (value) => {
+    if(Number.isInteger(value)){
+      return true;
+    }
+    return false;
+  }
+
   let selected = false;
   let idRoom = '';
   let gamertag = '';
@@ -12,10 +34,13 @@ $(document).ready(function() {
   let chatRoomOpen = false;
   let limitRooms = 5;
   let limitSearch = 5;
+  let openSearch = false;
 
   const closeChatRoom = () => {
     $('section#room-chat').fadeOut('fast');
-    $('nav').show();
+    if(!openSearch){
+      $('nav').show();
+    }
     socket.emit('leave room');
     waitLog = true;
     chatRoomOpen = false;
@@ -31,7 +56,7 @@ $(document).ready(function() {
   }
 
   const searchOpen = ()=>{
-    open = true;
+    openSearch = true;
     $('#input_search').val('');
     $('section#search').show();
     $('nav').hide();
@@ -40,7 +65,7 @@ $(document).ready(function() {
   }
 
   const searchClose = () => {
-    open = false;
+    openSearch = false;
     $('section#search').hide();
     $('section#chat-room').hide();
     $('#inside_rooms').html('');
@@ -78,9 +103,13 @@ $(document).ready(function() {
 
     if(linkHref != '#' || !linkHref){
       li.addClass('on-page');
-      $("html, body").animate({scrollTop:position.top}, 1000);
+      $("html, body").animate({scrollTop:position.top-60}, 1000);
       return false;
     }
+  });
+
+  $('.msg').click(function(){
+      $(this).fadeOut('fast');
   });
 
   $('#more-rooms').click(() => {
@@ -121,10 +150,10 @@ $(document).ready(function() {
   $('#close_room_chat').click(closeChatRoom);
 
   socket.on('news rooms', (data) => {
-        data.sort((a,b) => b.online_players - a.online_players);
+      //  data.sort((a,b) => b.online_players - a.online_players);
         $('#inside_news').html('');
         data.forEach((room) => {
-            $('#inside_news').append('<div class="room" id="'+room._id+'" name="'+strip_tags(room.name)+'" game="'+strip_tags(room.game)+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+strip_tags(room.game)+'</div><div class="room-mode">'+strip_tags(room.name)+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
+            $('#inside_news').append('<div class="room" platform="'+room.platform+'" id="'+room._id+'" name="'+strip_tags(room.name)+'" game="'+strip_tags(room.game)+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/'+imagesPlatform[room.platform]+'" alt="xbox-one"></div><div class="room-game">'+strip_tags(room.game)+'</div><div class="room-mode">'+strip_tags(room.name)+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
         });
         if(data.length < limitRooms || data.length >= 100){
           $('#more-rooms').hide();
@@ -151,13 +180,29 @@ $(document).ready(function() {
 
 
    $('form[name="create_room"]').submit(function() {
+     const idError = $('#error-crate-room');
+    idError.fadeOut('fast');
+
      if(gamertag){
         const data = {};
+
         data.name = strip_tags($('#name').val());
-        data.max_players = strip_tags($('#limit').val());
+        data.max_players = Math.round(strip_tags($('#limit').val()));
         data.game = strip_tags($('#game').val());
-        data.platform = strip_tags($('select#plataform option:selected').val());
-        socket.emit('create room', data);
+        data.platform = strip_tags($('select#platform option:selected').val());
+
+        if(!validateName(data.game)){
+          idError.html('Nome do jogo inválido, deve conter de 2 a 20 caracteres.');
+          idError.fadeIn('fast');
+        } else if(!validateName(data.name)){
+          idError.html('Nome da sala inválido, deve conter de 2 a 20 caracteres.');
+          idError.fadeIn('fast');
+        } else if(!(data.max_players >= 2 && data.max_players <= 64)){
+          idError.html('Número máximo de pessoas na sala inválido, mínimo:2 maximo:64');
+          idError.fadeIn('fast');
+        } else {
+          socket.emit('create room', data);
+        }
       } else{
         $('#save-gamertag').modal('show');
       }
@@ -232,6 +277,8 @@ $(document).ready(function() {
         const name = $(this).attr('name');
         const game = $(this).attr('game');
         const id = $(this).attr('id');
+        const platform = $(this).attr('platform');
+        $('#users-online > img').attr('src', 'imgs/'+imagesPlatform[platform]);
         $('span#name-span-game').html(strip_tags(game));
         $('span.modo-game').html(strip_tags(name));
         idRoom = id;
@@ -246,10 +293,10 @@ $(document).ready(function() {
       }
   });
   socket.on('search response', (data) => {
-        data.sort((a,b) => b.online_players - a.online_players);
+      //  data.sort((a,b) => b.online_players - a.online_players);
         $('#search_rooms').html('');
         data.forEach((room) => {
-          $('#search_rooms').append('<div class="room" id="'+room._id+'" name="'+strip_tags(room.name)+'" game="'+strip_tags(room.game)+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div><div class="room-game">'+strip_tags(room.game)+'</div><div class="room-mode">'+strip_tags(room.name)+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
+          $('#search_rooms').append('<div class="room" platform="'+room.platform+'" id="'+room._id+'" name="'+strip_tags(room.name)+'" game="'+strip_tags(room.game)+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/'+imagesPlatform[room.platform]+'" alt="xbox-one"></div><div class="room-game">'+strip_tags(room.game)+'</div><div class="room-mode">'+strip_tags(room.name)+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
         });
         if(data.length < limitSearch || data.length >= 100){
           $('#more-search').hide();
@@ -262,6 +309,7 @@ $(document).ready(function() {
       if(typeof data === 'object'){
         $('#close_room').click();
         openChatRoom();
+        $('#users-online > img').attr('src', 'imgs/'+imagesPlatform[data.platform]);
         $('span#name-span-game').html(strip_tags(data.game));
         $('span.modo-game').html(strip_tags(data.name));
         $('div#onlines').append('<div id="'+socket.id+'" class="online">'+strip_tags(gamertag)+'</div>');
@@ -288,18 +336,19 @@ $(document).ready(function() {
     }
   }
 
-  let open = false;
-
   $('#toggle-people').click(function() {
     $('#users-online').toggle('slide');
   });
 
-  $('a#search_link').click(searchOpen);
+  $('a#search_link').click(() => {
+      searchOpen();
+      return false;
+  });
   $('span.close-btn').click(searchClose);
 
   $('body').keydown(e =>{
       if(e.which == 27){
-        if(open){
+        if(openSearch){
           searchClose();
         }
         closeChatRoom();

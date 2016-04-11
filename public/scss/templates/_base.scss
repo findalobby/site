@@ -5,6 +5,26 @@
   @include make-row();
 }
 
+.msg{
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 7px;
+  border-radius: 2px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: $font_main;
+  cursor: pointer;
+  text-align: center;
+  display: none;
+}
+
+.error{
+  background-color: rgb(208, 25, 30);
+  color: $font_color_main;
+  border: 2px solid rgb(215, 20, 26);
+}
+
 .close-btn{
     font-family: $font_main;
     color: $font_color_main;

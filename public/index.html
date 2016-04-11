@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#2d2d2d">
   <link rel="stylesheet" type="text/css" href="css/vendors/bootstrap/bootstrap.css">
   <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="icon" type="image/png" href="imgs/logo4.png"/>
   <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
   <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 </head>
@@ -38,7 +39,7 @@
                       <a class="page-scroll" href="#rooms">Salas</a>
                   </li>
                   <li>
-                      <a class="page-scroll" href="#">Contato</a>
+                      <a class="page-scroll" href="#contact">Contato</a>
                   </li>
                   <li>
                       <a class="page-scroll" id="search_link" href="#">Buscar</a>
@@ -68,7 +69,12 @@
     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" id="ul-search">
       <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
       <li class="li_dropdown" data="360.png" name="XBOX 360"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
-  </ul>
+      <li class="li_dropdown" data="ps4.png" name="PLAYSTATION 4"><a  href="#">PLAY 4 <img  src="imgs/ps4.png"></a></li>
+      <li class="li_dropdown" data="ps4.png" name="PLAYSTATION 3"><a  href="#">PLAY 3 <img  src="imgs/ps4.png"></a></li>
+      <li class="li_dropdown" data="pc.png" name="PC"><a  href="#">PC <img  src="imgs/pc.png"></a></li>
+      <li class="li_dropdown" data="ios.png" name="IOS"><a  href="#">IOS <img  src="imgs/ios.png"></a></li>
+      <li class="li_dropdown" data="android.png" name="ANDROID"><a  href="#">ANDROID <img  src="imgs/android.png"></a></li>
+    </ul>
 </div>
 
 <div class="container">
@@ -102,25 +108,27 @@
         <h4 class="modal-title" id="myModalLabel">Criar sala</h4>
       </div>
       <div class="modal-body">
+        <div id="error-crate-room" class="msg error">Ocorreu um erro</div>
         <form method="POST" action="" name="create_room">
           <div class="form-group">
               <label for="email">JOGO</label>
-              <input class="form-control" required type="text" name="game" id="game">
+              <input class="form-control" placeholder="GTA V, BO3, CS:GO" required type="text" name="game" id="game">
           </div>
           <div class="form-group">
               <label for="email">NOME DA SALA</label>
-              <input class="form-control" required type="text" name="name" id="name">
+              <input class="form-control" placeholder="Corrida, TDM, Competitivo" required type="text" name="name" id="name">
           </div>
           <div class="form-group ">
-              <label for="first_name">QUANTIDADE</label>
-              <input class="form-control" required type="text" name="limit" id="limit">
+              <label for="first_name">MÁXIMO DE PESSOAS</label>
+              <input class="form-control" placeholder="2, 3, 4..." required type="text" name="limit" id="limit">
           </div>
           <div class="form-group">
               <label for="first_name">PLATAFORMA</label>
-              <select class="form-control" name="platform" id="plataform">
+              <select class="form-control" name="platform" id="platform">
                 <option>XBOX 360</option>
                 <option>XBOX ONE</option>
-                <option>PLAYSTATION</option>
+                <option>PLAYSTATION 4</option>
+                <option>PLAYSTATION 3</option>
                 <option>PC</option>
                 <option>ANDROID</option>
                 <option>IOS</option>
@@ -161,11 +169,17 @@
   <div class="container">
   <div id="rooms" class="content">
     <span id="text-menu-rooms">salas</span>
+
     <div id="dropdown-search" class="dropdown">
       <div class="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
       <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" id="ul-rooms">
         <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
         <li class="li_dropdown" data="360.png" name="XBOX 360"><a  href="#">XBOX 360 <img  src="imgs/360.png"></a></li>
+        <li class="li_dropdown" data="ps4.png" name="PLAYSTATION 4"><a  href="#">PLAY 4 <img  src="imgs/ps4.png"></a></li>
+        <li class="li_dropdown" data="ps4.png" name="PLAYSTATION 3"><a  href="#">PLAY 3 <img  src="imgs/ps4.png"></a></li>
+        <li class="li_dropdown" data="pc.png" name="PC"><a  href="#">PC <img  src="imgs/pc.png"></a></li>
+        <li class="li_dropdown" data="ios.png" name="IOS"><a  href="#">IOS <img  src="imgs/ios.png"></a></li>
+        <li class="li_dropdown" data="android.png" name="ANDROID"><a  href="#">ANDROID <img  src="imgs/android.png"></a></li>
       </ul>
     </div>
     </div>
@@ -222,6 +236,41 @@
 </div>
 </section> -->
 
+
+<section id="contact">
+  <div class="container">
+    <div class="content">
+      <span id="text-contact">Mídias Socias</span>
+    </div>
+
+    <div class="content">
+      <div id="social-media">
+        <div id="facebook" class="social-media-button">
+          <a target="_blank" class="teste" href="http://facebook.com/#">
+          <img src="imgs/fb-logo.png" class="social-media-logo img-responsive">
+          <span class="social-media-text">facebook</span>
+          </a>
+        </div>
+
+        <div id="twitter" class="social-media-button">
+          <a target="_blank" class="teste" href="http://twitter.com/#">
+          <img src="imgs/twitter-logo.png" class="social-media-logo img-responsive">
+          <span class="social-media-text">twitter</span>
+          </a>
+        </div>
+
+        <div id="googleplus" class="social-media-button">
+          <a target="_blank" class="teste" href="http://google.com/+/#">
+          <img src="imgs/google-plus-logo.png" class="social-media-logo img-responsive">
+          <span class="social-media-text">google +</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 <section id="room-chat">
   <button type="button" id="close_room_chat" class="close" data-dismiss="modal" aria-label="Close">
     <span aria-hidden="true">×</span>
@@ -267,9 +316,9 @@
            <div class="msg"><span class="user">Paulo Roberto:</span> vão a merda todos vocês</div>
            <div class="msg">batata</div>
            <div class="msg me">Mate sua familia, coma merda</div>
+           <div class="msg me">Mate sua familia, coma merda</div>
            <div class="msg"><span class="user">Paulo Roberto:</span> vão a merda todos vocês</div>
            <div class="msg">batata</div>
-           <div class="msg me">Mate sua familia, coma merda</div>
          </div>
       </div>
     </div>

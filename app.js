@@ -9,10 +9,34 @@ mongoose.connect('mongodb://localhost/findalobby');
 const Schema = mongoose.Schema;
 
 const _schema = {
-    name: {type: String},
-    max_players:{type: Number},
-    game: {type: String},
-    platform: {type: String}
+    name: {type: String, required: true,
+      validate:{
+        validator: (value) => {
+          if(value.length >=2 && value.length <=20){
+            return true;
+          }
+          return false;
+        }
+      }
+    },
+    max_players:{type: Number, min: 2, max:64, required: true, validate:{
+        validator: (value) =>  Number.isInteger(value)
+    }},
+    game: {type: String,
+      required: true,
+      validate:{
+        validator: (value) => {
+          if(value.length >=2 && value.length <=20){
+            return true;
+          }
+          return false;
+        }
+      }
+    },
+    platform: {type: String,
+      enum:['XBOX 360', 'XBOX ONE', 'PLAYSTATION 4', 'PLAYSTATION 3', 'PC', 'IOS', 'ANDROID'],
+      required: true
+    }
 }
 
 const schemaRoom = new Schema(_schema, {  toObject: { virtuals: true},  toJSON: {virtuals: true } });
@@ -98,8 +122,10 @@ const emitRooms = (emitter) => {
     socket.on('create room', (value) => {
       if((socket.gamertag) && !(socket.idRoom)){
         room.create(value, (err, data) => {
-          joinRoom(socket, data._id);
-          socket.emit('room response',data);
+          if(data && !err){
+            joinRoom(socket, data._id);
+            socket.emit('room response',data);
+          }
         });
       }
     });
