@@ -1,7 +1,10 @@
+'use strict';
+
 const gulp = require('gulp');
 const jshint = require('gulp-jshint');
 const clean = require('gulp-clean');
-
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
 
 gulp.task('clean', () => {
   return gulp.src('public/dist')
@@ -15,7 +18,8 @@ gulp.task('jshint', () => {
 });
 
 gulp.task('uglify', ['clean'], () => {
-  return gulp.src('public/js/**/*.js')
+  return gulp.src('public/js/*.js')
+  .pipe(uglify())
   .pipe(gulp.dest('public/dist/js'));
 });
 

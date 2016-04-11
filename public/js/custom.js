@@ -1,9 +1,7 @@
 $(document).ready(function() {
 
-  'use strict';
-
-  const socket = io();
-  const imagesPlatform = {
+  var socket = io();
+  var imagesPlatform = {
     'XBOX ONE': 'one.png',
     'XBOX 360': '360.png',
     'PLAYSTATION 4': 'ps4.png',
@@ -12,31 +10,31 @@ $(document).ready(function() {
     'ANDROID': 'android.png',
     'PC': 'pc.png'
   };
-  const validateName = (value) => {
+  var validateName = function(value) {
     if(value.length >=2 && value.length <=20){
       return true;
     }
     return false;
   }
-  const isInteger = (value) => {
+  var isInteger = function(value) {
     if(Number.isInteger(value)){
       return true;
     }
     return false;
   }
 
-  let selected = false;
-  let idRoom = '';
-  let gamertag = '';
-  let join = false;
-  let logMsg = [];
-  let waitLog = true;
-  let chatRoomOpen = false;
-  let limitRooms = 5;
-  let limitSearch = 5;
-  let openSearch = false;
+  var selected = false;
+  var idRoom = '';
+  var gamertag = '';
+  var join = false;
+  var logMsg = [];
+  var waitLog = true;
+  var chatRoomOpen = false;
+  var limitRooms = 5;
+  var limitSearch = 5;
+  var openSearch = false;
 
-  const closeChatRoom = () => {
+  var closeChatRoom = function() {
     $('section#room-chat').fadeOut('fast');
     if(!openSearch){
       $('nav').show();
@@ -46,7 +44,7 @@ $(document).ready(function() {
     chatRoomOpen = false;
   }
 
-  const openChatRoom = () => {
+  var openChatRoom = function() {
     waitLog = true;
     logMsg = [];
     $('nav').hide();
@@ -55,7 +53,7 @@ $(document).ready(function() {
     $('section#room-chat').fadeIn('fast');
   }
 
-  const searchOpen = ()=>{
+  var searchOpen = function() {
     openSearch = true;
     $('#input_search').val('');
     $('section#search').show();
@@ -64,7 +62,7 @@ $(document).ready(function() {
     changeScroll();
   }
 
-  const searchClose = () => {
+  var searchClose = function()  {
     openSearch = false;
     $('section#search').hide();
     $('section#chat-room').hide();
@@ -82,8 +80,8 @@ $(document).ready(function() {
   // });
 
     $(window).scroll(function(){
-    	const scrollTopAtual = $(this).scrollTop();
-    	const nav = $('nav');
+    	var scrollTopAtual = $(this).scrollTop();
+    	var nav = $('nav');
 
     	if (scrollTopAtual >= 200) {
     		nav.addClass('bg-scroll');
@@ -95,9 +93,9 @@ $(document).ready(function() {
   });
 
   $('ul.nav > li > a').click(function() {
-    const li = $(this).parent();
-    const position = $(this.hash).offset();
-    const linkHref = $(this).attr('href');
+    var li = $(this).parent();
+    var position = $(this.hash).offset();
+    var linkHref = $(this).attr('href');
 
     $('li.on-page').removeClass('on-page');
 
@@ -112,8 +110,8 @@ $(document).ready(function() {
       $(this).fadeOut('fast');
   });
 
-  $('#more-rooms').click(() => {
-    const rooms = $('#menu-rooms');
+  $('#more-rooms').click(function()  {
+    var rooms = $('#menu-rooms');
     if(limitRooms < 100){
       limitRooms += 5;
     }
@@ -121,9 +119,9 @@ $(document).ready(function() {
     socket.emit('get news rooms', {selected, limit: limitRooms});
   });
 
-  $('#more-search').click(() => {
-    const search = $('#search');
-    const valueInput = $('#input_search').val();
+  $('#more-search').click(function() {
+    var search = $('#search');
+    var valueInput = $('#input_search').val();
     if(limitSearch < 100){
       limitSearch += 5;
     }
@@ -140,7 +138,7 @@ $(document).ready(function() {
   });
   $('#ul-search > li').click(function() {
     dropdownUpdate(this);
-    const valueInput = $('#input_search').val();
+    var valueInput = $('#input_search').val();
     limitRooms = 5;
     limitSearch = 5;
     socket.emit('get news rooms', {selected, limit: limitRooms});
@@ -149,10 +147,10 @@ $(document).ready(function() {
   });
   $('#close_room_chat').click(closeChatRoom);
 
-  socket.on('news rooms', (data) => {
+  socket.on('news rooms', function(data)  {
       //  data.sort((a,b) => b.online_players - a.online_players);
         $('#inside_news').html('');
-        data.forEach((room) => {
+        data.forEach(function(room) {
             $('#inside_news').append('<div class="room" platform="'+room.platform+'" id="'+room._id+'" name="'+strip_tags(room.name)+'" game="'+strip_tags(room.game)+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/'+imagesPlatform[room.platform]+'" alt="xbox-one"></div><div class="room-game">'+strip_tags(room.game)+'</div><div class="room-mode">'+strip_tags(room.name)+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
         });
         if(data.length < limitRooms || data.length >= 100){
@@ -162,8 +160,8 @@ $(document).ready(function() {
         }
   });
 
-  $('form[name="msg-chat"]').submit(() => {
-    let msg = strip_tags($('#text-msg').val());
+  $('form[name="msg-chat"]').submit(function()  {
+    var msg = strip_tags($('#text-msg').val());
     if(msg && gamertag){
       socket.emit('send msg', msg);
       $('div#inside-msgs').append('<div class="msg me">'+msg+'</div>');
@@ -180,11 +178,11 @@ $(document).ready(function() {
 
 
    $('form[name="create_room"]').submit(function() {
-     const idError = $('#error-crate-room');
+     var idError = $('#error-crate-room');
     idError.fadeOut('fast');
 
      if(gamertag){
-        const data = {};
+        var data = {};
 
         data.name = strip_tags($('#name').val());
         data.max_players = Math.round(strip_tags($('#limit').val()));
@@ -209,7 +207,7 @@ $(document).ready(function() {
        return false;
    });
 
-   $('form[name="save_gamertag"]').submit(() => {
+   $('form[name="save_gamertag"]').submit(function()  {
      $('#save-gamertag').modal('hide');
      gamertag = strip_tags($('#gamertag').val());
      socket.emit('save gamertag', gamertag);
@@ -222,14 +220,14 @@ $(document).ready(function() {
 
 
 
-  socket.on('new msg', (data) => {
+  socket.on('new msg', function(data)  {
     $('div#inside-msgs').append('<div class="msg"><span class="user">'+strip_tags(data.gamertag)+':</span> '+strip_tags(data.msg)+'</div>');
     registerLog(logMsg, data);
     scrollBottom("all-msgs");
   });
 
-  socket.on('new user', (data) => {
-      const idData = setId(data);
+  socket.on('new user', function(data)  {
+      var idData = setId(data);
       $('div#onlines').append('<div id="'+idData+'" class="online">'+strip_tags(data.gamertag)+'</div>');
       $('div#inside-msgs').append('<div class="msg online">Usuário <span class="name-on">'+strip_tags(data.gamertag)+'</span> acabou de entrar!</div>');
       socket.emit('im online', data.id);
@@ -239,25 +237,27 @@ $(document).ready(function() {
         msg: 'online'
       });
   });
-  socket.on('user leaves', (id) => $('#'+id.replace('/#', '')).fadeOut('fast'));
+  socket.on('user leaves', function(id) {
+     $('#'+id.replace('/#', '')).fadeOut('fast');
+   });
 
-  socket.on('log users', (data) => {
-      const idUser = setId(data);
+  socket.on('log users', function(data)  {
+      var idUser = setId(data);
       if(!document.getElementById(idUser)){
         $('div#onlines').append('<div id="'+idUser+'" class="online">'+strip_tags(data.gamertag)+'</div>');
       }
   });
 
-  socket.on('get msg', (data) => {
+  socket.on('get msg', function(data) {
     socket.emit('getting log', {to: data, log:logMsg});
     console.log(logMsg);
   });
 
-  socket.on('recive log', (data) => {
+  socket.on('recive log', function(data)  {
       if(waitLog){
         logMsg = data;
-        logMsg.forEach((data) => {
-          const idData = setId(data);
+        logMsg.forEach(function(data){
+          var idData = setId(data);
           if(idData== socket.id){
             $('div#inside-msgs').append('<div class="msg me">'+strip_tags(data.msg)+'</div>');
             console.log('meu');
@@ -274,10 +274,10 @@ $(document).ready(function() {
 
 
   $('.container > .content').on('click', '.room', function() {
-        const name = $(this).attr('name');
-        const game = $(this).attr('game');
-        const id = $(this).attr('id');
-        const platform = $(this).attr('platform');
+        var name = $(this).attr('name');
+        var game = $(this).attr('game');
+        var id = $(this).attr('id');
+        var platform = $(this).attr('platform');
         $('#users-online > img').attr('src', 'imgs/'+imagesPlatform[platform]);
         $('span#name-span-game').html(strip_tags(game));
         $('span.modo-game').html(strip_tags(name));
@@ -292,10 +292,10 @@ $(document).ready(function() {
         }
       }
   });
-  socket.on('search response', (data) => {
+  socket.on('search response', function(data)  {
       //  data.sort((a,b) => b.online_players - a.online_players);
         $('#search_rooms').html('');
-        data.forEach((room) => {
+        data.forEach(function(room) {
           $('#search_rooms').append('<div class="room" platform="'+room.platform+'" id="'+room._id+'" name="'+strip_tags(room.name)+'" game="'+strip_tags(room.game)+'"><div class="room-platform-icon"><img class="platform-icon" src="imgs/'+imagesPlatform[room.platform]+'" alt="xbox-one"></div><div class="room-game">'+strip_tags(room.game)+'</div><div class="room-mode">'+strip_tags(room.name)+'</div><div class="room-capacity">'+room.online_players+'/'+room.max_players+'</div></div>');
         });
         if(data.length < limitSearch || data.length >= 100){
@@ -305,7 +305,7 @@ $(document).ready(function() {
         }
   });
 
-  socket.on('room response', (data) => {
+  socket.on('room response', function(data)  {
       if(typeof data === 'object'){
         $('#close_room').click();
         openChatRoom();
@@ -317,18 +317,20 @@ $(document).ready(function() {
 
   });
 
-  setInterval(() => socket.emit('get news rooms', {selected, limit: limitRooms}), 5000);
+  setInterval(function() {
+    socket.emit('get news rooms', {selected, limit: limitRooms});
+  }, 5000);
 
 
   $('#input_search').keydown(function(){
-      const valueInput = $(this).val();
+      var valueInput = $(this).val();
       socket.emit('search', {input: valueInput, selected, limit: limitSearch});
   });
 
 
-  let defaultBg = 'url(../../imgs/bg1.jpg)';
+  var defaultBg = 'url(../../imgs/bg1.jpg)';
 
-  const changeScroll = () => {
+  var changeScroll = function() {
     if($('body').css('overflow') == 'visible'){
         $('body').css('overflow', 'hidden');
     }else{
@@ -340,13 +342,13 @@ $(document).ready(function() {
     $('#users-online').toggle('slide');
   });
 
-  $('a#search_link').click(() => {
+  $('a#search_link').click(function() {
       searchOpen();
       return false;
   });
   $('span.close-btn').click(searchClose);
 
-  $('body').keydown(e =>{
+  $('body').keydown(function(e){
       if(e.which == 27){
         if(openSearch){
           searchClose();
@@ -355,7 +357,7 @@ $(document).ready(function() {
       }
    });
 
-   $('#btn-create-room').click(() => {
+   $('#btn-create-room').click(function() {
      $('#criar-sala').modal('show');
      if(!gamertag){
           $('#save-gamertag').modal('show');
@@ -363,15 +365,19 @@ $(document).ready(function() {
      }
    });
 
-  $('#criar-sala').on('show.bs.modal', e => changeScroll());
-  $('#criar-sala').on('hidden.bs.modal', e => changeScroll());
+  $('#criar-sala').on('show.bs.modal', function() {
+    changeScroll();
+  });
+  $('#criar-sala').on('hidden.bs.modal', function(){
+    changeScroll();
+  });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', function()  {
     alert('Desconectado, atualizando página.');
     window.location.reload(true);
   });
 
-  setInterval(() =>{
+  setInterval(function() {
     $('header').addClass("transitionBG");
     if(defaultBg ==  'url(../../imgs/bg1.jpg)'){
       defaultBg = "url(../../imgs/bg2.jpg)";
@@ -409,13 +415,13 @@ $(document).ready(function() {
   onLoaded();
 
   function scrollBottom(divId){
-    let objDiv = document.getElementById(divId);
+    var objDiv = document.getElementById(divId);
     objDiv.scrollTop = objDiv.scrollHeight;
   }
 
   function dropdownUpdate(drop){
     selected = $(drop).attr('name');
-    let path = $(drop).attr('data');
+    var path = $(drop).attr('data');
     $('.platforms').html('<img src="imgs/'+path+'">');
     $('.dropdown').removeClass('open');
     return false;
