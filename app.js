@@ -74,7 +74,11 @@ const emitRooms = (emitter) => {
       });
     });
 
-    socket.on('save gamertag', (gamertag) => socket.gamertag = gamertag.substring(0,20));
+    socket.on('save gamertag', (gamertag) => {
+      if(gamertag.substring(0,20).length > 1){
+        socket.gamertag = gamertag.substring(0,20)
+      }
+    });
 
     socket.on('search', (data) => {
       const searchName = {};
@@ -150,7 +154,12 @@ function joinRoom(socket, idRoom){
           if(hostId != socket.id){
             socket.broadcast.to(hostId).emit('get msg', socket.id);
           }
+          socket.emit('open chat');
+      } else {
+        socket.emit('full chat');
       }
+    } else {
+      socket.emit('full chat');
     }
   });
 }

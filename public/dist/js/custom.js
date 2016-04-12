@@ -7,6 +7,7 @@ $(document).ready(function () {
   'use strict';
 
   var socket = io();
+  var scrolls = [];
   var imagesPlatform = {
     'XBOX ONE': 'one.png',
     'XBOX 360': '360.png',
@@ -16,30 +17,20 @@ $(document).ready(function () {
     'ANDROID': 'android.png',
     'PC': 'pc.png'
   };
+
   var validateName = function validateName(value) {
     if (value.length >= 2 && value.length <= 20) {
       return true;
     }
     return false;
   };
+
   var isInteger = function isInteger(value) {
     if (Number.isInteger(value)) {
       return true;
     }
     return false;
   };
-
-  var selected = false;
-  var idRoom = '';
-  var gamertag = '';
-  var join = false;
-  var logMsg = [];
-  var waitLog = true;
-  var chatRoomOpen = false;
-  var limitRooms = 5;
-  var limitSearch = 5;
-  var openSearch = false;
-
   var closeChatRoom = function closeChatRoom() {
     $('section#room-chat').fadeOut('fast');
     if (!openSearch) {
@@ -57,6 +48,7 @@ $(document).ready(function () {
     $('#inside-msgs').html('');
     $('#onlines').html('');
     $('section#room-chat').fadeIn('fast');
+    $('div#onlines').append('<div id="' + socket.id + '" class="online">' + strip_tags(gamertag) + '</div>');
   };
 
   var searchOpen = function searchOpen() {
@@ -79,11 +71,30 @@ $(document).ready(function () {
     }
   };
 
+  var selected = false;
+  var idRoom = '';
+  var gamertag = '';
+  var join = false;
+  var logMsg = [];
+  var waitLog = true;
+  var chatRoomOpen = false;
+  var limitRooms = 5;
+  var limitSearch = 5;
+  var openSearch = false;
+
   // $('section#menu-rooms, header').click(() => {
   //   if(chatRoomOpen){
   //     closeChatRoom();
   //   }
   // });
+
+  $('.page-scroll').each(function () {
+    var positionTop = $(this.hash).offset() ? $(this.hash).offset().top - 60 : false;
+    if (positionTop > 0) {
+      scrolls[positionTop] = this;
+    }
+  });
+  console.log(scrolls);
 
   $(window).scroll(function () {
     var scrollTopAtual = $(this).scrollTop();
@@ -91,9 +102,12 @@ $(document).ready(function () {
 
     if (scrollTopAtual >= 200) {
       nav.addClass('bg-scroll');
+      $('#home-link').css('display', 'block');
+    } else if (scrollTopAtual == 0) {
+      $('li.on-page').removeClass('on-page');
+      $('#home-link').css('display', 'none');
     } else {
       nav.removeClass('bg-scroll');
-      //    $('li.on-page').removeClass('on-page');
     }
   });
 
@@ -111,7 +125,7 @@ $(document).ready(function () {
     }
   });
 
-  $('.msg').click(function () {
+  $('.alert').click(function () {
     $(this).fadeOut('fast');
   });
 
@@ -212,12 +226,18 @@ $(document).ready(function () {
   });
 
   $('form[name="save_gamertag"]').submit(function () {
-    $('#save-gamertag').modal('hide');
-    gamertag = strip_tags($('#gamertag').val());
-    socket.emit('save gamertag', gamertag);
-    if (join) {
-      openChatRoom();
-      joinRoom(idRoom, gamertag, socket);
+    var tag = strip_tags($('#gamertag').val());
+    $('#error-gamertag').fadeOut('fast');
+    if (tag.length > 1) {
+      $('#save-gamertag').modal('hide');
+      gamertag = strip_tags($('#gamertag').val());
+      socket.emit('save gamertag', gamertag);
+      if (join) {
+        joinRoom(idRoom, gamertag, socket);
+      }
+    } else {
+      $('#error-gamertag').html('Gamertag curta de mais');
+      $('#error-gamertag').fadeIn('fast');
     }
     return false;
   });
@@ -266,7 +286,7 @@ $(document).ready(function () {
         } else if (idData == 'online') {
           $('div#inside-msgs').append('<div class="msg online">Usuário <span class="name-on">' + strip_tags(maxLengthstr(data.gamertag)) + '</span> acabou de entrar!</div>');
         } else {
-          $('div#inside-msgs').append('<div class="msg"><span class="user">' + strip_tags(maxLengthstr(data.gamertag)) + ':</span> ' + strip_tags(maxLengthstr(data.msg)) + '</div>');
+          $('div#inside-msgs').append('<div class="msg"><span class="user">' + strip_tags(data.gamertag.substring(0, 20)) + ':</span> ' + strip_tags(maxLengthstr(data.msg)) + '</div>');
         }
       });
     }
@@ -288,10 +308,13 @@ $(document).ready(function () {
       join = true;
     } else {
       if (!chatRoomOpen) {
-        openChatRoom();
         joinRoom(idRoom, gamertag, socket);
       }
     }
+  });
+  socket.on('open chat', openChatRoom);
+  socket.on('full chat', function () {
+    return alert('Sala cheia, por favor tente mais tarde.');
   });
   socket.on('search response', function (data) {
     //  data.sort((a,b) => b.online_players - a.online_players);
@@ -309,11 +332,9 @@ $(document).ready(function () {
   socket.on('room response', function (data) {
     if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object') {
       $('#close_room').click();
-      openChatRoom();
       $('#users-online > img').attr('src', 'imgs/' + imagesPlatform[data.platform]);
       $('span#name-span-game').html(strip_tags(data.game));
       $('span.modo-game').html(strip_tags(data.name));
-      $('div#onlines').append('<div id="' + socket.id + '" class="online">' + strip_tags(gamertag) + '</div>');
     }
   });
 

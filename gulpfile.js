@@ -32,7 +32,7 @@ gulp.task('toes5', ['clean'], () => {
 });
 
 gulp.task('htmlmin', ['inline'], () => {
-  return gulp.src('public/*.html')
+  return gulp.src('public/index.html')
   .pipe(htmlmin({collapseWhitespace:true}))
   .pipe(gulp.dest('public/'));
 });
