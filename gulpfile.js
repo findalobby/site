@@ -6,6 +6,7 @@ const inlinesource = require('gulp-inline-source');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const htmlmin = require('gulp-htmlmin');
+const jshint = require('gulp-jshint');
 
 gulp.task('clean', () => {
   return gulp.src('public/dist')
@@ -13,13 +14,13 @@ gulp.task('clean', () => {
 });
 
 gulp.task('jshint', () => {
-  return gulp.src('public/js/*.js')
+  return gulp.src('public/dist/js/**/*.js')
   .pipe(jshint())
   .pipe(jshint.reporter('default'));
 });
 
 gulp.task('inline', ['toes5'], () => {
-  return gulp.src('public/dev/index.html')
+  return gulp.src('public/dev/**/*.html')
   .pipe(inlinesource())
   .pipe(gulp.dest('public/'));
 });
@@ -36,4 +37,4 @@ gulp.task('htmlmin', ['inline'], () => {
   .pipe(gulp.dest('public/'));
 });
 
-gulp.task('default', ['htmlmin']);
+gulp.task('default', ['htmlmin', 'jshint']);

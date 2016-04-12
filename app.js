@@ -53,8 +53,8 @@ const emitRooms = (emitter) => {
 
   io.on('connection', (socket) => {
     console.log('Online: ', Object.keys(io.sockets['connected']).length);
-
     schemaRoom.virtual('online_players').get(function(){
+
             const idRoom = this._id;
             return onlineRoom(idRoom, io);
     });
@@ -74,7 +74,7 @@ const emitRooms = (emitter) => {
       });
     });
 
-    socket.on('save gamertag', (gamertag) => socket.gamertag = gamertag);
+    socket.on('save gamertag', (gamertag) => socket.gamertag = gamertag.substring(0,20));
 
     socket.on('search', (data) => {
       const searchName = {};
@@ -115,7 +115,7 @@ const emitRooms = (emitter) => {
 
     socket.on('send msg', (data) => {
       if(socket.idRoom){
-        socket.broadcast.to(socket.idRoom).emit('new msg', {msg: data, gamertag: socket.gamertag, id: socket.id});
+        socket.broadcast.to(socket.idRoom).emit('new msg', {msg: data.substring(0,255), gamertag: socket.gamertag, id: socket.id});
       }
     });
 
@@ -138,19 +138,22 @@ const emitRooms = (emitter) => {
 });
 
 function joinRoom(socket, idRoom){
-  if((socket.gamertag) && (!socket.idRoom)){
-      socket.idRoom = idRoom;
-      socket.join(idRoom);
-      console.log(idRoom+': '+onlineRoom(idRoom, io));
-      socket.broadcast.to(idRoom).emit('new user', {gamertag:socket.gamertag, id:socket.id});
+  room.findOne({_id:idRoom}, (err, data) => {
+    if(data && !err && (onlineRoom(data._id, io) < data.max_players)){
+      if((socket.gamertag) && (!socket.idRoom)){
+          socket.idRoom = data._id;
+          socket.join(socket.idRoom);
+          console.log(socket.idRoom+': '+onlineRoom(socket.idRoom, io));
+          socket.broadcast.to(socket.idRoom).emit('new user', {gamertag:socket.gamertag, id:socket.id});
 
-      const hostId = hostRoom(socket.idRoom, io);
-      if(hostId != socket.id){
-        socket.broadcast.to(hostId).emit('get msg', socket.id);
+          const hostId = hostRoom(socket.idRoom, io);
+          if(hostId != socket.id){
+            socket.broadcast.to(hostId).emit('get msg', socket.id);
+          }
       }
-  }
+    }
+  });
 }
-
 function leaveRoom(socket, limit){
   if(socket.idRoom){
     if(onlineRoom(socket.idRoom, io) == limit){
