@@ -46,6 +46,7 @@
     @include make-xs-column-offset(2);
     @include make-md-column(6);
     @include make-md-column-offset(3);
+    display: none;
     margin-top: 25px;
     background-color: color_main(0.7);
     border: none;

@@ -39,7 +39,6 @@ $(document).ready(function() {
 
   const openChatRoom = () => {
     waitLog = true;
-    logMsg = [];
     $('nav').hide();
     $('#inside-msgs').html('');
     $('#onlines').html('');
@@ -185,7 +184,7 @@ $(document).ready(function() {
       $('div#inside-msgs').append('<div class="msg me">'+msg+'</div>');
       $('#text-msg').val('');
     }
-    registerLog(logMsg,{
+    registerLog({
           id: socket.id,
           gamertag,
           msg
@@ -246,7 +245,7 @@ $(document).ready(function() {
 
   socket.on('new msg', (data) => {
     $('div#inside-msgs').append('<div class="msg"><span class="user">'+strip_tags(data.gamertag)+':</span> '+strip_tags(maxLengthstr(data.msg))+'</div>');
-    registerLog(logMsg, data);
+    registerLog(data);
     scrollBottom("all-msgs");
   });
 
@@ -262,24 +261,26 @@ $(document).ready(function() {
       if(newUser){
         $('div#onlines').append('<div id="'+idData+'" class="online">'+strip_tags(data.gamertag)+'</div>');
         $('div#inside-msgs').append('<div class="msg online-msg">Usuário <span class="name-on">'+strip_tags(data.gamertag)+'</span> acabou de entrar!</div>');
-        registerLog(logMsg, {
+        registerLog({
           id: '/#online',
           gamertag: data.gamertag,
           msg: 'online'
         });
       }
       socket.emit('im online', data.id);
+      scrollBottom("all-msgs");
   });
   socket.on('user leaves', (data) => {
     const div = $('#'+data.id.replace('/#', ''));
     div.fadeOut('fast', () => {
         div.remove();
-        $('div#inside-msgs').append('<div class="msg online-msg">Usuário <span class="name-on">'+strip_tags(data.gamertag)+'</span> saiu!</div>');
+        $('div#inside-msgs').append('<div class="msg online-msg"><span class="name-on">'+strip_tags(data.gamertag)+'</span> saiu!</div>');
         registerLog(logMsg, {
           id: '/#offline',
           gamertag: data.gamertag,
           msg: 'offline'
         });
+        scrollBottom("all-msgs");
     });
   });
 
@@ -295,16 +296,17 @@ $(document).ready(function() {
   });
 
   socket.on('recive log', (data) => {
-      if(waitLog){
+      if(waitLog && data.length <=30){
         logMsg = data;
+        console.log(data.length);
         logMsg.forEach((data) => {
           const idData = setId(data);
           if(idData== socket.id){
             $('div#inside-msgs').append('<div class="msg me">'+strip_tags(maxLengthstr(data.msg))+'</div>');
           } else if(idData == 'online'){
-             $('div#inside-msgs').append('<div class="msg online-msg">Usuário <span class="name-on">'+strip_tags(maxLengthstr(data.gamertag))+'</span> acabou de entrar!</div>');
+             $('div#inside-msgs').append('<div class="msg online-msg"><span class="name-on">'+strip_tags(maxLengthstr(data.gamertag))+'</span> acabou de entrar!</div>');
           } else if(idData == 'offline'){
-            $('div#inside-msgs').append('<div class="msg online-msg">Usuário <span class="name-on">'+strip_tags(maxLengthstr(data.gamertag))+'</span> saiu!</div>');
+            $('div#inside-msgs').append('<div class="msg online-msg"><span class="name-on">'+strip_tags(maxLengthstr(data.gamertag))+'</span> saiu!</div>');
           } else {
             $('div#inside-msgs').append('<div class="msg"><span class="user">'+strip_tags(data.gamertag.substring(0,20))+':</span> '+strip_tags(maxLengthstr(data.msg))+'</div>');
           }
@@ -378,7 +380,7 @@ $(document).ready(function() {
   }
 
   $('#toggle-people').click(function() {
-    $('#users-online').toggle('slide');
+    $('#users-online').slideToggle(1);
   });
 
   $('a#search_link').click(() => {
@@ -434,13 +436,13 @@ $(document).ready(function() {
     return msg.substring(0,255);
   }
 
-  function registerLog(arr, msg){
+  function registerLog(msg){
     msg.msg = maxLengthstr(msg.msg);
-    if(arr.length <= 100){
-      arr.push(msg);
+    if(logMsg.length <= 30){
+      logMsg.push(msg);
     } else {
-      arr = [];
-      ar.push(msg);
+      logMsg = [];
+      logMsg.push(msg);
     }
   }
 
