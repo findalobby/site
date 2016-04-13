@@ -12,7 +12,7 @@
   <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 </head>
   <!-- Navigation -->
-  <body id="home">
+<body id="home">
   <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
           <!-- Brand and toggle get grouped for better mobile display -->
@@ -29,11 +29,8 @@
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
-                  <li class="hidden">
-                      <a href="#page-top"></a>
-                  </li>
                   <li>
-                      <a class="page-scroll" href="#home">Home</a>
+                      <a class="page-scroll" id="home-link" href="#home">Home</a>
                   </li>
                   <li>
                       <a class="page-scroll" href="#rooms">Salas</a>
@@ -54,17 +51,17 @@
   <header>
       <div class="container">
           <div class="intro-text">
-              <div class="intro-lead-in">Junte-se a outro jogadores!</div>
-              <div class="intro-heading">Crie seu lobby ou pesquise por algum.</div>
-              <a id="btn-create-room" class="page-scroll btn btn-xl">CRIAR LOBBY</a>
+              <div class="intro-lead-in">Ache pessoas que joguem os mesmos jogos que você!</div>
+              <div class="intro-heading">Crie sua sala ou procure por alguma.</div>
+              <a id="btn-create-room" class="page-scroll btn btn-xl">CRIAR SALA</a>
           </div>
       </div>
   </header>
-<section id="search">
+  <section id="search">
 
   <span class="close-btn" id="btn-search"> X </span>
   <input id="input_search" placeholder="Busque sua sala" type="text">
-<div id="dropdown-search" class="dropdown">
+  <div id="dropdown-search" class="dropdown">
   <div class="platforms" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">+</div>
     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" id="ul-search">
       <li class="li_dropdown" data="one.png" name="XBOX ONE"><a  href="#">XBOX ONE <img  src="imgs/one.png"></a></li>
@@ -75,32 +72,19 @@
       <li class="li_dropdown" data="ios.png" name="IOS"><a  href="#">IOS <img  src="imgs/ios.png"></a></li>
       <li class="li_dropdown" data="android.png" name="ANDROID"><a  href="#">ANDROID <img  src="imgs/android.png"></a></li>
     </ul>
-</div>
+  </div>
 
-<div class="container">
+  <div class="container">
   <div class="content">
     <div id="search_rooms">
-      <div class="room">
-        <div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div>
-        <div class="room-game">black ops 3</div>
-        <div class="room-mode">domination</div>
-        <div class="room-capacity">1/12</div>
-      </div>
-
-      <div class="room">
-        <div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div>
-        <div class="room-game">black ops 3</div>
-        <div class="room-mode">domination</div>
-        <div class="room-capacity">1/12</div>
-      </div>
     </div>
     <button id="more-search" class="btn-load-more">Carregar+</button>
   </div>
-</div>
+  </div>
 
-</section>
-<!-- Modal create room -->
-<div class="modal fade" id="criar-sala" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  </section>
+  <!-- Modal create room -->
+  <div class="modal fade" id="criar-sala" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -141,10 +125,10 @@
       </form>
     </div>
   </div>
-</div>
+  </div>
 
-<!-- Modal gamertag -->
-<div class="modal fade" id="save-gamertag" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <!-- Modal gamertag -->
+  <div class="modal fade" id="save-gamertag" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -164,9 +148,9 @@
       </form>
     </div>
   </div>
-</div>
+  </div>
 
-<section id="menu-rooms">
+  <section id="menu-rooms">
   <div class="container">
   <div id="rooms" class="content">
     <span id="text-menu-rooms">salas</span>
@@ -187,26 +171,13 @@
 
     <div class="content" id="news_rooms">
       <div id="inside_news">
-        <div class="room">
-          <div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div>
-          <div class="room-game">black ops 3</div>
-          <div class="room-mode">domination</div>
-          <div class="room-capacity">1/12</div>
-        </div>
-
-        <div class="room">
-          <div class="room-platform-icon"><img class="platform-icon" src="imgs/one.png" alt="xbox-one"></div>
-          <div class="room-game">black ops 3</div>
-          <div class="room-mode">domination</div>
-          <div class="room-capacity">1/12</div>
-        </div>
       </div>
       <button id="more-rooms" class="btn-load-more">Carregar+</button>
     </div>
   </div>
-</section>
+  </section>
 
-<!-- <section id="chat-room">
+  <!-- <section id="chat-room">
   <div class="container-fluid">
     <div class="content">
       <div id="toggle-people">
@@ -234,11 +205,11 @@
         <input type="text" value="" placeholder="Sua mensagem..." name="msg" class="form-control" id="text-msg">
       </form>
   </div>
-</div>
-</section> -->
+  </div>
+  </section> -->
 
 
-<section id="contact">
+  <section id="contact">
   <div class="container">
     <div class="content">
       <span id="text-contact">Mídias Socias</span>
@@ -247,7 +218,7 @@
     <div class="content">
       <div id="social-media">
         <div id="facebook" class="social-media-button">
-          <a target="_blank" href="http://facebook.com/findalobby">
+          <a target="_blank"  href="http://facebook.com/findalobby">
           <img src="imgs/fb-logo.png" class="social-media-logo img-responsive">
           <span class="social-media-text">facebook</span>
           </a>
@@ -269,10 +240,10 @@
       </div>
     </div>
   </div>
-</section>
+  </section>
 
 
-<section id="room-chat">
+  <section id="room-chat">
   <button type="button" id="close_room_chat" class="close" data-dismiss="modal" aria-label="Close">
     <span aria-hidden="true">×</span>
   </button>
@@ -282,44 +253,10 @@
         <img src="imgs/one.png">
         <span class="name-game"><span id="name-span-game">BO2</span> - <span class="modo-game">Zombies</span></span>
         <div id="onlines">
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
-          <div class="online">Paulo Roberto</div>
         </div>
       </div>
       <div id="all-msgs">
         <div id="inside-msgs">
-           <div class="msg"><span class="user">Paulo Roberto:</span> vão a merda todos vocês</div>
-           <div class="msg">batata</div>
-           <div class="msg me">Mate sua familia, coma merda</div>
-           <div class="msg"><span class="user">Paulo Roberto:</span> vão a merda todos vocês</div>
-           <div class="msg">batata</div>
-           <div class="msg me">Mate sua familia, coma merda</div>
-           <div class="msg online">Usuário <span class="name-on">Soufoda</span> acabou de entrar!</div>
-           <div class="msg"><span class="user">Paulo Roberto:</span> vão a merda todos vocês</div>
-           <div class="msg">batata</div>
-           <div class="msg me">Mate sua familia, coma merda</div>
-           <div class="msg"><span class="user">Paulo Roberto:</span> vão a merda todos vocês</div>
-           <div class="msg">batata</div>
-           <div class="msg me">Mate sua familia, coma merda</div>
-           <div class="msg me">Mate sua familia, coma merda</div>
-           <div class="msg"><span class="user">Paulo Roberto:</span> vão a merda todos vocês</div>
-           <div class="msg">batata</div>
          </div>
       </div>
     </div>
@@ -332,7 +269,7 @@
     <span class="icon-bar"></span>
     <span class="icon-bar"></span>
     </div>
-</section>
+  </section>
 <script type="text/javascript" src="../dist/js/jquery.js" inline></script>
 <script type="text/javascript" src="../dist/js/bootstrap.min.js" inline></script>
 <script type="text/javascript" src="../dist/js/socket.js" inline></script>

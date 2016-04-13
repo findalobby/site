@@ -81,9 +81,10 @@ $(document).ready(function () {
   var limitRooms = 5;
   var limitSearch = 5;
   var openSearch = false;
+  var joinStatus = true;
 
-  // $('section#menu-rooms, header').click(() => {
   //   if(chatRoomOpen){
+  // $('section#menu-rooms, header').click(() => {
   //     closeChatRoom();
   //   }
   // });
@@ -94,7 +95,6 @@ $(document).ready(function () {
       scrolls[positionTop] = this;
     }
   });
-  console.log(scrolls);
 
   $(window).scroll(function () {
     var scrollTopAtual = $(this).scrollTop();
@@ -249,18 +249,36 @@ $(document).ready(function () {
   });
 
   socket.on('new user', function (data) {
+    var newUser = true;
     var idData = setId(data);
-    $('div#onlines').append('<div id="' + idData + '" class="online">' + strip_tags(data.gamertag) + '</div>');
-    $('div#inside-msgs').append('<div class="msg online">Usuário <span class="name-on">' + strip_tags(data.gamertag) + '</span> acabou de entrar!</div>');
-    socket.emit('im online', data.id);
-    registerLog(logMsg, {
-      id: '/#online',
-      gamertag: data.gamertag,
-      msg: 'online'
+    $('div.online').each(function () {
+      if ($(this).attr('id') == idData) {
+        newUser = false;
+        return false;
+      }
     });
+    if (newUser) {
+      $('div#onlines').append('<div id="' + idData + '" class="online">' + strip_tags(data.gamertag) + '</div>');
+      $('div#inside-msgs').append('<div class="msg online-msg">Usuário <span class="name-on">' + strip_tags(data.gamertag) + '</span> acabou de entrar!</div>');
+      registerLog(logMsg, {
+        id: '/#online',
+        gamertag: data.gamertag,
+        msg: 'online'
+      });
+    }
+    socket.emit('im online', data.id);
   });
-  socket.on('user leaves', function (id) {
-    return $('#' + id.replace('/#', '')).fadeOut('fast');
+  socket.on('user leaves', function (data) {
+    var div = $('#' + data.id.replace('/#', ''));
+    div.fadeOut('fast', function () {
+      div.remove();
+      $('div#inside-msgs').append('<div class="msg online-msg">Usuário <span class="name-on">' + strip_tags(data.gamertag) + '</span> saiu!</div>');
+      registerLog(logMsg, {
+        id: '/#offline',
+        gamertag: data.gamertag,
+        msg: 'offline'
+      });
+    });
   });
 
   socket.on('log users', function (data) {
@@ -272,7 +290,6 @@ $(document).ready(function () {
 
   socket.on('get msg', function (data) {
     socket.emit('getting log', { to: data, log: logMsg });
-    console.log(logMsg);
   });
 
   socket.on('recive log', function (data) {
@@ -282,9 +299,10 @@ $(document).ready(function () {
         var idData = setId(data);
         if (idData == socket.id) {
           $('div#inside-msgs').append('<div class="msg me">' + strip_tags(maxLengthstr(data.msg)) + '</div>');
-          console.log('meu');
         } else if (idData == 'online') {
-          $('div#inside-msgs').append('<div class="msg online">Usuário <span class="name-on">' + strip_tags(maxLengthstr(data.gamertag)) + '</span> acabou de entrar!</div>');
+          $('div#inside-msgs').append('<div class="msg online-msg">Usuário <span class="name-on">' + strip_tags(maxLengthstr(data.gamertag)) + '</span> acabou de entrar!</div>');
+        } else if (idData == 'offline') {
+          $('div#inside-msgs').append('<div class="msg online-msg">Usuário <span class="name-on">' + strip_tags(maxLengthstr(data.gamertag)) + '</span> saiu!</div>');
         } else {
           $('div#inside-msgs').append('<div class="msg"><span class="user">' + strip_tags(data.gamertag.substring(0, 20)) + ':</span> ' + strip_tags(maxLengthstr(data.msg)) + '</div>');
         }
@@ -295,19 +313,19 @@ $(document).ready(function () {
   });
 
   $('.container > .content').on('click', '.room', function () {
-    var name = $(this).attr('name');
-    var game = $(this).attr('game');
-    var id = $(this).attr('id');
-    var platform = $(this).attr('platform');
-    $('#users-online > img').attr('src', 'imgs/' + imagesPlatform[platform]);
-    $('span#name-span-game').html(strip_tags(game));
-    $('span.modo-game').html(strip_tags(name));
-    idRoom = id;
-    if (!gamertag) {
-      $('#save-gamertag').modal('show');
-      join = true;
-    } else {
-      if (!chatRoomOpen) {
+    if (!openSearch) {
+      var name = $(this).attr('name');
+      var game = $(this).attr('game');
+      var id = $(this).attr('id');
+      var platform = $(this).attr('platform');
+      $('#users-online > img').attr('src', 'imgs/' + imagesPlatform[platform]);
+      $('span#name-span-game').html(strip_tags(game));
+      $('span.modo-game').html(strip_tags(name));
+      idRoom = id;
+      if (!gamertag) {
+        $('#save-gamertag').modal('show');
+        join = true;
+      } else {
         joinRoom(idRoom, gamertag, socket);
       }
     }
@@ -392,23 +410,22 @@ $(document).ready(function () {
   });
 
   socket.on('disconnect', function () {
-    alert('Desconectado, atualizando página.');
     window.location.reload(true);
   });
 
-  setInterval(function () {
-    $('header').addClass("transitionBG");
-    if (defaultBg == 'url(../../imgs/bg1.jpg)') {
-      defaultBg = "url(../../imgs/bg2.jpg)";
-      $('header').css("background-image", "url(../../imgs/bg2.jpg)");
-    } else if (defaultBg == 'url(../../imgs/bg2.jpg)') {
-      defaultBg = "url(../../imgs/bg3.jpg)";
-      $('header').css("background-image", "url(../../imgs/bg3.jpg)");
-    } else {
-      defaultBg = "url(../../imgs/bg1.jpg)";
-      $('header').css("background-image", "url(../../imgs/bg1.jpg)");
-    }
-  }, 3000);
+  // setInterval(() =>{
+  //   $('header').addClass("transitionBG");
+  //   if(defaultBg ==  'url(../../imgs/bg1.jpg)'){
+  //     defaultBg = "url(../../imgs/bg2.jpg)";
+  //     $('header').css("background-image", "url(../../imgs/bg2.jpg)");
+  //   } else if(defaultBg ==  'url(../../imgs/bg2.jpg)'){
+  //     defaultBg = "url(../../imgs/bg3.jpg)";
+  //     $('header').css("background-image", "url(../../imgs/bg3.jpg)");
+  //   }else{
+  //     defaultBg = "url(../../imgs/bg1.jpg)";
+  //     $('header').css("background-image", "url(../../imgs/bg1.jpg)");
+  //   }
+  // }, 3000) ;
 
   function joinRoom(_id, gamertag, socket) {
     socket.emit('join room', _id);

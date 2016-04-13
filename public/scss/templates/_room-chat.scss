@@ -28,15 +28,15 @@ section#room-chat{
       font-size: 40px;
       font-weight: bold;
       line-height: 1;
-      color: #000;
+      color: color_main();
       right: 10px;
-      text-shadow: 0 1px 0 #fff;
       transition: 1s;
-      filter: alpha(opacity=20);
+      text-shadow: none;
+      opacity: 1;
       outline: none;
       &:hover, &:focus{
         opacity: 1;
-        color: color_main();
+        color:#fff;
         transition: 1s;
         text-shadow: 0 1px 0 #000;
         outline: none;
@@ -173,7 +173,7 @@ section#room-chat{
       float: right !important;
       background-color: second_color() !important;
     }
-    .online{
+    .online-msg{
       background-color: #fff !important;
       color: second_color() !important;
       span.name-on{

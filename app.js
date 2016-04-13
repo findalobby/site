@@ -168,11 +168,13 @@ function leaveRoom(socket, limit){
     if(onlineRoom(socket.idRoom, io) == limit){
         console.log(onlineRoom(socket.idRoom, io));
         room.remove({_id:socket.idRoom}, (err) => '');
+        socket.leave(socket.idRoom);
+        delete socket.idRoom;
     }else{
-      socket.broadcast.to(socket.idRoom).emit('user leaves', socket.id);
+      socket.broadcast.to(socket.idRoom).emit('user leaves', {id: socket.id, gamertag:socket.gamertag});
+      socket.leave(socket.idRoom);
+      delete socket.idRoom;
     }
-    socket.leave(socket.idRoom);
-    delete socket.idRoom;
   }
 }
 
