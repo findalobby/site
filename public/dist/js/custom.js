@@ -61,6 +61,7 @@ $(document).ready(function () {
 
   var searchClose = function searchClose() {
     openSearch = false;
+    limitSearch = 5;
     $('section#search').hide();
     $('section#chat-room').hide();
     $('#inside_rooms').html('');
@@ -110,7 +111,7 @@ $(document).ready(function () {
     }
   });
 
-  $('ul.nav > li > a').click(function () {
+  $('ul.nav > li > a, #logo').click(function () {
     var li = $(this).parent();
     var position = $(this.hash).offset();
     var linkHref = $(this).attr('href');
@@ -233,6 +234,8 @@ $(document).ready(function () {
       socket.emit('save gamertag', gamertag);
       if (join) {
         joinRoom(idRoom, gamertag, socket);
+      } else {
+        $('#criar-sala').modal('show');
       }
     } else {
       $('#error-gamertag').html('Gamertag curta de mais');
@@ -296,7 +299,6 @@ $(document).ready(function () {
   socket.on('recive log', function (data) {
     if (waitLog && data.length <= 30) {
       logMsg = data;
-      console.log(data.length);
       logMsg.forEach(function (data) {
         var idData = setId(data);
         if (idData == socket.id) {
@@ -397,10 +399,11 @@ $(document).ready(function () {
   });
 
   $('#btn-create-room').click(function () {
-    $('#criar-sala').modal('show');
     if (!gamertag) {
       $('#save-gamertag').modal('show');
       join = false;
+    } else {
+      $('#criar-sala').modal('show');
     }
   });
 
@@ -408,6 +411,12 @@ $(document).ready(function () {
     return changeScroll();
   });
   $('#criar-sala').on('hidden.bs.modal', function (e) {
+    return changeScroll();
+  });
+  $('#save-gamertag').on('show.bs.modal', function (e) {
+    return changeScroll();
+  });
+  $('#save-gamertag').on('hidden.bs.modal', function (e) {
     return changeScroll();
   });
 
