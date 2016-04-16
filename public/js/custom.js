@@ -8,7 +8,7 @@ $(document).ready(function() {
     'XBOX ONE': 'one.png',
     'XBOX 360': '360.png',
     'PLAYSTATION 4': 'ps4.png',
-    'PLAYSTATION 3': 'ps4.png',
+    'PLAYSTATION 3': 'ps3.png',
     'IOS': 'ios.png',
     'ANDROID': 'android.png',
     'PC': 'pc.png'
