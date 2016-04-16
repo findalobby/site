@@ -473,10 +473,16 @@ $(document).ready(function () {
   }
 
   function dropdownUpdate(drop) {
-    selected = $(drop).attr('name');
-    var path = $(drop).attr('data');
-    $('.platforms').html('<img src="imgs/' + path + '">');
-    $('.dropdown').removeClass('open');
+    if ($(drop).attr('name') != 'todas') {
+      selected = $(drop).attr('name');
+      var path = $(drop).attr('data');
+      $('.platforms').html('<img src="imgs/' + path + '">');
+      $('.dropdown').removeClass('open');
+    } else {
+      selected = false;
+      $('.platforms').html('+');
+      $('.dropdown').removeClass('open');
+    }
     return false;
   }
 
