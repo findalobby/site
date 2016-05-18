@@ -320,7 +320,7 @@ $(document).ready(function() {
 
 
   $('.container > .content').on('click', '.room', function() {
-      if(!openSearch){
+
           const name = $(this).attr('name');
           const game = $(this).attr('game');
           const id = $(this).attr('id');
@@ -335,7 +335,7 @@ $(document).ready(function() {
         } else {
             joinRoom(idRoom, gamertag, socket);
         }
-      }
+
   });
   socket.on('open chat', openChatRoom);
   socket.on('full chat', () => alert('Sala cheia, por favor tente mais tarde.'));

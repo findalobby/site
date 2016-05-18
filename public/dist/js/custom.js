@@ -317,21 +317,20 @@ $(document).ready(function () {
   });
 
   $('.container > .content').on('click', '.room', function () {
-    if (!openSearch) {
-      var name = $(this).attr('name');
-      var game = $(this).attr('game');
-      var id = $(this).attr('id');
-      var platform = $(this).attr('platform');
-      $('#users-online > img').attr('src', 'imgs/' + imagesPlatform[platform]);
-      $('span#name-span-game').html(strip_tags(game));
-      $('span.modo-game').html(strip_tags(name));
-      idRoom = id;
-      if (!gamertag) {
-        $('#save-gamertag').modal('show');
-        join = true;
-      } else {
-        joinRoom(idRoom, gamertag, socket);
-      }
+
+    var name = $(this).attr('name');
+    var game = $(this).attr('game');
+    var id = $(this).attr('id');
+    var platform = $(this).attr('platform');
+    $('#users-online > img').attr('src', 'imgs/' + imagesPlatform[platform]);
+    $('span#name-span-game').html(strip_tags(game));
+    $('span.modo-game').html(strip_tags(name));
+    idRoom = id;
+    if (!gamertag) {
+      $('#save-gamertag').modal('show');
+      join = true;
+    } else {
+      joinRoom(idRoom, gamertag, socket);
     }
   });
   socket.on('open chat', openChatRoom);
