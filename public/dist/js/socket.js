@@ -1,6 +1,6 @@
 "use strict";
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 (function (f) {
   if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === "object" && typeof module !== "undefined") {
@@ -1305,7 +1305,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             onConnecting();
           }
         }function onConnecting() {
-          if (! ~indexOf(self.connecting, socket)) {
+          if (!~indexOf(self.connecting, socket)) {
             self.connecting.push(socket);
           }
         }return socket;

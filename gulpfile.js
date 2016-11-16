@@ -4,9 +4,9 @@ const gulp = require('gulp');
 const clean = require('gulp-clean');
 const inlinesource = require('gulp-inline-source');
 const babel = require('gulp-babel');
-const uglify = require('gulp-uglify');
 const htmlmin = require('gulp-htmlmin');
 const jshint = require('gulp-jshint');
+const es2015 = require('babel-preset-es2015');
 
 gulp.task('clean', () => {
   return gulp.src('public/dist')
@@ -27,7 +27,7 @@ gulp.task('inline', ['toes5'], () => {
 
 gulp.task('toes5', ['clean'], () => {
   return gulp.src(['public/js/vendors/**/*.js','public/js/*.js'])
-  .pipe(babel({presets: ['es2015']}))
+  .pipe(babel({presets: [es2015]}))
   .pipe(gulp.dest('public/dist/js'));
 });
 
